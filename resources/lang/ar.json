@@ -1,0 +1,22 @@
+{
+    "auth.password": "auth.password",
+    "auth.failed": " فشلت المصادقة",
+    "auth.throttle": "auth.throttle",
+    "Add New Course": "اضف دورة جديده",
+    "Duration In Hours": "المدة بالساعات",
+    "Price": "الأسعار",
+    "Add New Hall": "إضافة قاعة جديدة",
+    "Name": "الاسم",
+    "Languages": "اللغات",
+    "Add a language": "أضف لغة",
+    "Save": "حفظ",
+    "Add": "إضافة",
+    "Add a translation": "إضافة ترجمة",
+    "Key": "مفتاح التقدم",
+    "Value": "القيمة",
+    "Translation": "الترجمة",
+    "key": "المفتاح",
+    "Actions": "الإجراءات",
+    "translate": "translate",
+    "Delete": "حذف"
+}

@@ -1,0 +1,19 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class CourseFactory extends Factory
+{
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->words(3, true),
+            'description' => fake()->paragraph(),
+            'category_id' => \App\Models\Category::factory(),
+            'training_center_id' => \App\Models\TrainingCenter::factory(),
+            'price' => fake()->numberBetween(100, 1000),
+        ];
+    }
+}

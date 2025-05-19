@@ -1,0 +1,22 @@
+{
+    "auth.password": "auth.password",
+    "auth.failed": "auth.failed",
+    "auth.throttle": "auth.throttle",
+    "Add New Course": "Add New Course",
+    "Duration In Hours": "Duration In Hours",
+    "Price": "Price",
+    "Add New Hall": "Add New Hall",
+    "Name": "Name",
+    "Languages": "Languages",
+    "Add a language": "Add a language",
+    "Save": "Save",
+    "Add": "Add",
+    "Add a translation": "Add a translation",
+    "Key": "Key",
+    "Value": "Value",
+    "Translation": "Translation",
+    "key": "key",
+    "Actions": "Actions",
+    "translate": "translate",
+    "Delete": "Delete"
+}
