@@ -15,10 +15,9 @@ class SessionFactory extends Factory
             'course_id' => \App\Models\Course::factory(),
             'hall_id' => \App\Models\Hall::factory(),
             'trainer_id' => \App\Models\User::factory(),
-            'start_date' => $startDate,
-            'end_date' => $endDate,
+            'start_time' => $startDate,
+            'end_time' => $endDate,
             'status' => fake()->randomElement(['scheduled', 'in_progress', 'completed', 'cancelled']),
-            'max_students' => fake()->numberBetween(5, 30),
         ];
     }
 }

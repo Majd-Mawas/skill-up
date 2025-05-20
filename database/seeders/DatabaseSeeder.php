@@ -23,10 +23,18 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AreaSeeder::class,
+            AreaNeighborSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
             TrainingCenterSeeder::class,
+            HallSeeder::class,
+            CourseSeeder::class,
+            SessionSeeder::class,
+            EnrollmentSeeder::class,
+            PaymentSeeder::class,
+            InvoiceSeeder::class,
+            CertificateSeeder::class,
         ]);
     }
 }

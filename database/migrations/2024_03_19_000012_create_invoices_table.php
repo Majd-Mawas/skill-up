@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('course_id')->constrained()->onDelete('restrict');
+            $table->foreignId('training_center_id')->constrained()->onDelete('restrict');
             $table->foreignId('payment_id')->nullable()->constrained()->onDelete('restrict');
             $table->string('invoice_number')->unique();
             $table->decimal('subtotal', 10, 2);

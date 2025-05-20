@@ -14,8 +14,6 @@ class Course extends Model
         'name',
         'description',
         'category_id',
-        'training_center_id',
-        'price',
     ];
 
     protected $casts = [
@@ -27,9 +25,11 @@ class Course extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function trainingCenter()
+    public function trainingCenters()
     {
-        return $this->belongsTo(TrainingCenter::class);
+        return $this->belongsToMany(TrainingCenter::class)
+            ->withPivot('price')
+            ->withTimestamps();
     }
 
     public function sessions()

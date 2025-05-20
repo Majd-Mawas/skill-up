@@ -13,8 +13,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('restrict');
-            $table->foreignId('training_center_id')->constrained()->onDelete('cascade');
-            $table->decimal('price', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

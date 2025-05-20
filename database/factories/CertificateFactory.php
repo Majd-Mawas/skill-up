@@ -11,10 +11,11 @@ class CertificateFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory(),
             'course_id' => \App\Models\Course::factory(),
-            'certificate_number' => fake()->unique()->uuid(),
-            'issue_date' => fake()->dateTimeBetween('-1 year', 'now'),
-            'expiry_date' => fake()->optional()->dateTimeBetween('now', '+1 year'),
+            'certificate_number' => fake()->unique()->numerify('CERT-#####'),
+            'issue_date' => fake()->date(),
+            'expiry_date' => fake()->dateTimeBetween('now', '+1 year'),
             'status' => fake()->randomElement(['active', 'expired', 'revoked']),
+            'metadata' => ['test' => 'test'],
         ];
     }
 }

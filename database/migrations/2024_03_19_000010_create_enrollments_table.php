@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('status');
             $table->dateTime('enrolled_at');
             $table->dateTime('completed_at')->nullable();
+            $table->decimal('grade', 5, 2)->nullable();
             $table->timestamps();
         });
     }

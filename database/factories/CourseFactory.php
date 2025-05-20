@@ -12,8 +12,6 @@ class CourseFactory extends Factory
             'name' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             'category_id' => \App\Models\Category::factory(),
-            'training_center_id' => \App\Models\TrainingCenter::factory(),
-            'price' => fake()->numberBetween(100, 1000),
         ];
     }
 }

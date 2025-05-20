@@ -31,25 +31,25 @@
                     <span class="menu-text"> Dashboard </span>
                 </a>
             </li>
-            {{-- <li class="menu-item">
+            <li class="menu-item">
                 <a href="{{ route('courses.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_book_3_line"></i></span>
                     <span class="menu-text"> Courses </span>
                 </a>
             </li>
-            <li class="menu-item">
+            {{-- <li class="menu-item">
                 <a href="{{ route('halls.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_building_2_line"></i></span>
                     <span class="menu-text"> Halls </span>
                 </a>
-            </li>
-            <li class="menu-item">
+            </li> --}}
+            {{-- <li class="menu-item">
                 <a href="{{ route('categories.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_grid_line"></i></span>
                     <span class="menu-text"> Categories </span>
                 </a>
-            </li>
-            <li class="menu-item">
+            </li> --}}
+            {{-- <li class="menu-item">
                 <a href="{{ route('companies.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_building_5_line"></i></span>
                     <span class="menu-text"> Companies </span>
