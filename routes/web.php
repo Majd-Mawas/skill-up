@@ -25,3 +25,14 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     Route::get('{first}/{second}', [RoutingController::class, 'secondLevel'])->name('second');
     Route::get('{any}', [RoutingController::class, 'root'])->name('any');
 });
+
+Route::get('lang/{locale}', function ($locale) {
+    if (!in_array($locale, ['en', 'ar'])) {
+        abort(400); // Invalid language
+    }
+
+    session(['locale' => $locale]);
+    app()->setLocale($locale);
+
+    return redirect()->back();
+})->name('lang.switch');

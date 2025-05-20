@@ -30,7 +30,7 @@
                                 <label class="block text-sm font-medium text-gray-600 dark:text-gray-200 mb-2"
                                     for="phone">Phone Number</label>
                                 <input id="phone" class="form-input" type="tel"
-                                    placeholder="Enter your phone number" name="phone" required>
+                                    placeholder="Enter your phone number" name="phone_number" required>
                                 @error('phone')
                                     <span class="text-danger text-sm">{{ $message }}</span>
                                 @enderror
@@ -57,7 +57,7 @@
                             </div>
 
                             <div class="flex justify-center mb-6">
-                                <button class="btn w-full text-white bg-primary">Log In</button>
+                                <button type="submit" class="btn w-full text-white bg-primary">Log In</button>
                             </div>
                         </form>
 

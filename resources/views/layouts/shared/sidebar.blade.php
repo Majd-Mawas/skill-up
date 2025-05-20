@@ -31,7 +31,7 @@
                     <span class="menu-text"> Dashboard </span>
                 </a>
             </li>
-            <li class="menu-item">
+            {{-- <li class="menu-item">
                 <a href="{{ route('courses.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_book_3_line"></i></span>
                     <span class="menu-text"> Courses </span>
@@ -54,7 +54,7 @@
                     <span class="menu-icon"><i class="mgc_building_5_line"></i></span>
                     <span class="menu-text"> Companies </span>
                 </a>
-            </li>
+            </li> --}}
             @if (env('APP_DEBUG'))
                 <li class="menu-title">Custom</li>
 

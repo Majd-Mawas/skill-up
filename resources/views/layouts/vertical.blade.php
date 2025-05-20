@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-sidenav-view="{{ $sidenav ?? 'default' }}">
+<html lang="en" data-sidenav-view="{{ $sidenav ?? 'default' }}" dir="{{ config('app.locale') == 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     @include('layouts.shared/title-meta', ['title' => $title])
