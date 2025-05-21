@@ -14,8 +14,8 @@ class ReviewFactory extends Factory
         $isCourseReview = fake()->boolean(70); // 70% chance of being a course review
 
         return [
-            'user_id' => User::factory(),
-            'course_id' => $isCourseReview ? Course::factory() : null,
+            'user_id' => User::inRandomOrder()->first()->id,
+            'course_id' => $isCourseReview ? Course::inRandomOrder()->first()->id : null,
             'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
             'rating' => fake()->numberBetween(1, 5),
             'comment' => fake()->paragraph(),
@@ -28,7 +28,7 @@ class ReviewFactory extends Factory
     public function courseReview(): static
     {
         return $this->state(fn(array $attributes) => [
-            'course_id' => Course::factory(),
+            'course_id' => Course::inRandomOrder()->first()->id,
             'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
         ]);
     }

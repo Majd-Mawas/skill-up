@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Course;
+use App\Models\Hall;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SessionFactory extends Factory
@@ -12,9 +15,9 @@ class SessionFactory extends Factory
         $endDate = fake()->dateTimeBetween($startDate, '+2 months');
 
         return [
-            'course_id' => \App\Models\Course::factory(),
-            'hall_id' => \App\Models\Hall::factory(),
-            'trainer_id' => \App\Models\User::factory(),
+            'course_id' => Course::inRandomOrder()->first()->id,
+            'hall_id' => Hall::inRandomOrder()->first()->id,
+            'trainer_id' => User::inRandomOrder()->first()->id,
             'start_time' => $startDate,
             'end_time' => $endDate,
             'status' => fake()->randomElement(['scheduled', 'in_progress', 'completed', 'cancelled']),

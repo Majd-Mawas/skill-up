@@ -11,7 +11,7 @@ class CourseTrainingCenterFactory extends Factory
     public function definition(): array
     {
         return [
-            'course_id' => Course::factory(),
+            'course_id' => Course::inRandomOrder()->first()->id,
             'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
             'price' => fake()->numberBetween(100, 1000),
         ];

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Course;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PaymentFactory extends Factory
@@ -9,8 +11,8 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'course_id' => \App\Models\Course::factory(),
+            'user_id' => User::inRandomOrder()->first()->id,
+            'course_id' => Course::inRandomOrder()->first()->id,
             'amount' => fake()->numberBetween(100, 1000),
             'payment_method' => fake()->randomElement(['credit_card', 'bank_transfer', 'cash']),
             'transaction_id' => fake()->uuid(),

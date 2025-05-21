@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingController;
 use App\Http\Controllers\Training\HallController;
 use App\Http\Controllers\Training\CourseLevelController;
+use App\Http\Controllers\Web\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::delete('courses/{course}/levels/{level}', [CourseLevelController::class, 'destroy'])->name('courses.levels.destroy');
             Route::post('courses/{course}/levels/reorder', [CourseLevelController::class, 'reorder'])->name('courses.levels.reorder');
         });
+        Route::resource('users', UserController::class);
     });
     Route::get('', [RoutingController::class, 'index'])->name('root');
     Route::get('/home', fn() => view('index'))->name('home');
