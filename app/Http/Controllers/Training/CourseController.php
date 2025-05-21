@@ -14,7 +14,11 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with(['category', 'area', 'sessions'])
+        $courses = Course::with(['category'])
+            ->when(request('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            })
             ->latest()
             ->paginate(10);
 
@@ -26,7 +30,8 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('training.courses.create');
+        $categories = \App\Models\Category::all();
+        return view('training.courses.create', compact('categories'));
     }
 
     /**
@@ -38,21 +43,14 @@ class CourseController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
             'category_id' => ['required', 'exists:categories,id'],
-            'area_id' => ['required', 'exists:areas,id'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'duration' => ['required', 'integer', 'min:1'],
-            'max_students' => ['required', 'integer', 'min:1'],
-            'start_date' => ['required', 'date', 'after:today'],
-            'end_date' => ['required', 'date', 'after:start_date'],
-            'status' => ['required', 'in:draft,published,completed,cancelled'],
         ]);
 
         $course = Course::create($validated);
 
         return redirect()
-            ->route('courses.show', $course)
+            ->route('web.courses.index', $course)
             ->with('success', 'Course created successfully.');
     }
 
@@ -61,8 +59,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        $course->load(['category', 'area', 'sessions', 'enrollments']);
-
+        $course->load(['category']);
         return view('training.courses.show', compact('course'));
     }
 
@@ -71,7 +68,8 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return view('training.courses.edit', compact('course'));
+        $categories = \App\Models\Category::all();
+        return view('training.courses.edit', compact('course', 'categories'));
     }
 
     /**
@@ -83,21 +81,14 @@ class CourseController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
             'category_id' => ['required', 'exists:categories,id'],
-            'area_id' => ['required', 'exists:areas,id'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'duration' => ['required', 'integer', 'min:1'],
-            'max_students' => ['required', 'integer', 'min:1'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after:start_date'],
-            'status' => ['required', 'in:draft,published,completed,cancelled'],
         ]);
 
         $course->update($validated);
 
         return redirect()
-            ->route('courses.show', $course)
+            ->route('web.courses.show', $course)
             ->with('success', 'Course updated successfully.');
     }
 
@@ -106,14 +97,10 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        if ($course->enrollments()->exists()) {
-            return back()->with('error', 'Cannot delete course with existing enrollments.');
-        }
-
         $course->delete();
 
         return redirect()
-            ->route('courses.index')
+            ->route('web.courses.index')
             ->with('success', 'Course deleted successfully.');
     }
 }

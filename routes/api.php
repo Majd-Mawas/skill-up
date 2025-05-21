@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Public routes
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->name('api.v1.')->group(function () {
     // Areas
     Route::apiResource('areas', AreaController::class);
 
@@ -66,6 +66,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Certificates
     Route::apiResource('certificates', CertificateController::class);
+
+    // Halls
+    Route::apiResource('halls', HallController::class);
 });
 
 // Guest routes

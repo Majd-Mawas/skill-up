@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Halls', 'sub_title' => 'All', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
+@extends('layouts.vertical', ['title' => 'Courses', 'sub_title' => 'All', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('content')
     <style>
@@ -9,21 +9,18 @@
     </style>
     <div class="grid grid-cols-12">
         <div class="col-span-12">
-
             <div class="overflow-x-auto">
                 <div class="min-w-full inline-block align-middle">
                     <div class="border rounded-lg divide-y divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
                         <div class="py-3 px-4 flex flex-wrap justify-between">
                             <div>
-
-                                <form method="GET" action="{{ route('halls.index') }}">
-                                    <div class="relative max-w-xs">
+                                <form method="GET" action="{{ route('web.courses.index') }}">
+                                    <div class="relative">
                                         <label for="table-search" class="sr-only">Search</label>
                                         <input type="text" name="search" id="table-search"
                                             value="{{ request('search') }}" class="form-input ps-11"
                                             placeholder="Search for items">
                                         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
-                                            <!-- Icon -->
                                             <svg class="h-3.5 w-3.5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
                                                 width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                 <path
@@ -34,10 +31,10 @@
                                 </form>
                             </div>
                             <div>
-                                <a href="{{ route('halls.create') }}"
-                                    class="btn border-primary text-primary hover:bg-primary hover:text-white">Create
-                                    Hall</a>
-
+                                <a href="{{ route('web.courses.create') }}"
+                                    class="btn border-primary text-primary hover:bg-primary hover:text-white">
+                                    Create Course
+                                </a>
                             </div>
                         </div>
                         <div class="overflow-hidden">
@@ -52,26 +49,25 @@
                                             </div>
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Capacity
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price
-                                            Per Hour
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Name') }}
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Available
+                                            {{ __('Category') }}
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Description') }}
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Action') }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    @foreach ($halls as $hall)
+                                    @foreach ($courses as $course)
                                         <tr>
                                             <td class="py-3 ps-4">
                                                 <div class="flex items-center h-5">
@@ -83,33 +79,28 @@
                                             </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                <a href="{{ route('halls.show', ['hall' => $hall->id]) }}">
-                                                    {{ $hall->name }}
-                                                </a>
+                                                {{ $course->name }}
                                             </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                {{ $hall->capacity }}</td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                {{ $hall->price_per_hour }}</td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-
-                                                @if ($hall->available)
-                                                    <span
-                                                        class="inline-flex items-center gap-1.5 py-2 px-2 rounded-full text-xs font-medium bg-green-500 text-white"></span>
-                                                @else
-                                                    <span
-                                                        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-500 text-white"></span>
-                                                @endif
+                                                {{ $course->category->name }}
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                                                {{ Str::limit($course->description, 50) }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <a class="text-primary hover:text-sky-700 mx-2"
-                                                    href="{{ route('halls.edit', ['hall' => $hall->id]) }}">Edit</a>
-                                                <form action="{{ route('halls.destroy', ['hall' => $hall->id]) }}"
+                                                    href="{{ route('web.courses.show', ['course' => $course->id]) }}">
+                                                    Show
+                                                </a>
+                                                <a class="text-primary hover:text-sky-700 mx-2"
+                                                    href="{{ route('web.courses.edit', ['course' => $course->id]) }}">
+                                                    Edit
+                                                </a>
+                                                <form
+                                                    action="{{ route('web.courses.destroy', ['course' => $course->id]) }}"
                                                     method="POST" style="display: inline"
-                                                    onsubmit="return confirm('Are you sure you want to delete this Hall?');">
+                                                    onsubmit="return confirm('Are you sure you want to delete this course?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
@@ -120,39 +111,17 @@
                                             </td>
                                         </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                         </div>
                         <div>
                             <div class="py-4 px-4">
-                                {{ $halls->appends(request()->query())->links() }}
+                                {{ $courses->appends(request()->query())->links() }}
                             </div>
                         </div>
-                        {{-- <div class="py-1 px-4">
-                            <nav class="flex items-center space-x-2">
-                                <a class="text-gray-400 hover:text-primary p-4 inline-flex items-center gap-2 font-medium rounded-md"
-                                    href="#">
-                                    <span aria-hidden="true">«</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="w-10 h-10 bg-primary text-white p-4 inline-flex items-center text-sm font-medium rounded-full"
-                                    href="#" aria-current="page">1</a>
-                                <a class="w-10 h-10 text-gray-400 hover:text-primary p-4 inline-flex items-center text-sm font-medium rounded-full"
-                                    href="#">2</a>
-                                <a class="w-10 h-10 text-gray-400 hover:text-primary p-4 inline-flex items-center text-sm font-medium rounded-full"
-                                    href="#">3</a>
-                                <a class="text-gray-400 hover:text-primary p-4 inline-flex items-center gap-2 font-medium rounded-md"
-                                    href="#">
-                                    <span class="sr-only">Next</span>
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </nav>
-                        </div> --}}
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

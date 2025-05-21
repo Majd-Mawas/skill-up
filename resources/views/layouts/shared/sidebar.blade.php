@@ -32,9 +32,21 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="{{ route('courses.index') }}" class="menu-link">
+                <a href="{{ route('web.courses.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_book_3_line"></i></span>
                     <span class="menu-text"> Courses </span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('web.training-centers.index') }}" class="menu-link">
+                    <span class="menu-icon"><i class="mgc_building_1_line"></i></span>
+                    <span class="menu-text"> Training Centers </span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('web.halls.index') }}" class="menu-link">
+                    <span class="menu-icon"><i class="mgc_door_line"></i></span>
+                    <span class="menu-text"> Halls </span>
                 </a>
             </li>
             {{-- <li class="menu-item">

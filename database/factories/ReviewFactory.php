@@ -16,7 +16,7 @@ class ReviewFactory extends Factory
         return [
             'user_id' => User::factory(),
             'course_id' => $isCourseReview ? Course::factory() : null,
-            'training_center_id' => TrainingCenter::factory(),
+            'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
             'rating' => fake()->numberBetween(1, 5),
             'comment' => fake()->paragraph(),
         ];
@@ -29,7 +29,7 @@ class ReviewFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'course_id' => Course::factory(),
-            'training_center_id' => TrainingCenter::factory(),
+            'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
         ]);
     }
 
@@ -40,7 +40,7 @@ class ReviewFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'course_id' => null,
-            'training_center_id' => TrainingCenter::factory(),
+            'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
         ]);
     }
 }

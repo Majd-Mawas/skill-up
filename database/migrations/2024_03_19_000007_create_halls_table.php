@@ -11,7 +11,10 @@ return new class extends Migration
         Schema::create('halls', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description')->nullable();
             $table->integer('capacity');
+            $table->decimal('price_per_hour', 10, 2);
+            $table->boolean('available')->default(true);
             $table->foreignId('training_center_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

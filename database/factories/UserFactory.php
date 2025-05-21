@@ -22,9 +22,9 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'phone_number' => fake()->unique()->phoneNumber(),
+            'phone_number' => '+9639' . fake()->unique()->numberBetween(31000000, 99999999),
             'password' => Hash::make('password'),
-            'area_id' => Area::factory(),
+            'area_id' => Area::inRandomOrder()->first()->id,
             'email_verified_at' => now(),
             'phone_verified' => fake()->boolean(),
             'remember_token' => Str::random(10),

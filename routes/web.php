@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingController;
+use App\Http\Controllers\Training\HallController;
+use App\Http\Controllers\Training\CourseLevelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,18 @@ require __DIR__ . '/phone-verification.php';
 require __DIR__ . '/training.php';
 
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
+    Route::name('web.')->group(function () {
+        Route::resource('halls', HallController::class);
+        Route::prefix('courses')->group(function () {
+            Route::get('courses/{course}/levels', [CourseLevelController::class, 'index'])->name('courses.levels.index');
+            Route::get('courses/{course}/levels/create', [CourseLevelController::class, 'create'])->name('courses.levels.create');
+            Route::post('courses/{course}/levels', [CourseLevelController::class, 'store'])->name('courses.levels.store');
+            Route::get('courses/{course}/levels/{level}/edit', [CourseLevelController::class, 'edit'])->name('courses.levels.edit');
+            Route::put('courses/{course}/levels/{level}', [CourseLevelController::class, 'update'])->name('courses.levels.update');
+            Route::delete('courses/{course}/levels/{level}', [CourseLevelController::class, 'destroy'])->name('courses.levels.destroy');
+            Route::post('courses/{course}/levels/reorder', [CourseLevelController::class, 'reorder'])->name('courses.levels.reorder');
+        });
+    });
     Route::get('', [RoutingController::class, 'index'])->name('root');
     Route::get('/home', fn() => view('index'))->name('home');
     Route::get('{first}/{second}/{third}', [RoutingController::class, 'thirdLevel'])->name('third');
@@ -36,3 +50,6 @@ Route::get('lang/{locale}', function ($locale) {
 
     return redirect()->back();
 })->name('lang.switch');
+
+// Course Levels Routes
+Route::middleware(['auth'])->group(function () {});

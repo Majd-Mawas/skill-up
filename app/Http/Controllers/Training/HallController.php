@@ -11,24 +11,28 @@ use Illuminate\Validation\ValidationException;
 class HallController extends Controller
 {
     /**
-     * Display a listing of the halls for a training center.
+     * Display a listing of the halls.
      */
-    public function index(TrainingCenter $trainingCenter)
+    public function index()
     {
-        $halls = $trainingCenter->halls()
-            ->withCount('sessions')
+        $halls = Hall::with(['trainingCenter'])
+            ->when(request('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            })
             ->latest()
             ->paginate(10);
 
-        return view('training.halls.index', compact('trainingCenter', 'halls'));
+        return view('training.halls.index', compact('halls'));
     }
 
     /**
      * Show the form for creating a new hall.
      */
-    public function create(TrainingCenter $trainingCenter)
+    public function create()
     {
-        return view('training.halls.create', compact('trainingCenter'));
+        $trainingCenters = TrainingCenter::where('status', 'active')->get();
+        return view('training.halls.create', compact('trainingCenters'));
     }
 
     /**
@@ -36,42 +40,53 @@ class HallController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request, TrainingCenter $trainingCenter)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
             'capacity' => ['required', 'integer', 'min:1'],
-            'status' => ['required', 'in:available,maintenance,unavailable'],
-            'equipment' => ['nullable', 'array'],
-            'equipment.*' => ['string'],
+            'price_per_hour' => ['required', 'numeric', 'min:0'],
+            'available' => ['boolean'],
+            'training_center_id' => ['required', 'exists:training_centers,id'],
+            'media' => ['nullable', 'array'],
+            'media.*' => ['image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
-        $hall = $trainingCenter->halls()->create($validated);
+        $hall = Hall::create($validated);
+
+        if ($request->hasFile('media')) {
+            foreach ($request->file('media') as $media) {
+                $hall->addMedia($media)
+                    ->preservingOriginal()
+                    ->toMediaCollection('halls');
+            }
+        }
 
         return redirect()
-            ->route('training-centers.halls.show', [$trainingCenter, $hall])
+            ->route('halls.index')
             ->with('success', 'Hall created successfully.');
     }
 
     /**
      * Display the specified hall.
      */
-    public function show(TrainingCenter $trainingCenter, Hall $hall)
+    public function show(Hall $hall)
     {
-        $hall->load(['sessions' => function ($query) {
+        $hall->load(['trainingCenter', 'sessions' => function ($query) {
             $query->latest()->paginate(10);
         }]);
 
-        return view('training.halls.show', compact('trainingCenter', 'hall'));
+        return view('training.halls.show', compact('hall'));
     }
 
     /**
      * Show the form for editing the specified hall.
      */
-    public function edit(TrainingCenter $trainingCenter, Hall $hall)
+    public function edit(Hall $hall)
     {
-        return view('training.halls.edit', compact('trainingCenter', 'hall'));
+        $trainingCenters = TrainingCenter::where('status', 'active')->get();
+        return view('training.halls.edit', compact('hall', 'trainingCenters'));
     }
 
     /**
@@ -79,28 +94,50 @@ class HallController extends Controller
      *
      * @throws ValidationException
      */
-    public function update(Request $request, TrainingCenter $trainingCenter, Hall $hall)
+    public function update(Request $request, Hall $hall)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
             'capacity' => ['required', 'integer', 'min:1'],
-            'status' => ['required', 'in:available,maintenance,unavailable'],
-            'equipment' => ['nullable', 'array'],
-            'equipment.*' => ['string'],
+            'price_per_hour' => ['required', 'numeric', 'min:0'],
+            'available' => ['boolean'],
+            'training_center_id' => ['required', 'exists:training_centers,id'],
+            'media' => ['nullable', 'array'],
+            'media.*' => ['image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'delete_media' => ['nullable', 'array'],
+            'delete_media.*' => ['exists:media,id'],
         ]);
 
         $hall->update($validated);
 
+        // Handle media deletion
+        if ($request->has('delete_media')) {
+            $hall->getMedia('halls')
+                ->whereIn('id', $request->delete_media)
+                ->each(function ($media) {
+                    $media->delete();
+                });
+        }
+
+        // Handle new media uploads
+        if ($request->hasFile('media')) {
+            foreach ($request->file('media') as $media) {
+                $hall->addMedia($media)
+                    ->preservingOriginal()
+                    ->toMediaCollection('halls');
+            }
+        }
+
         return redirect()
-            ->route('training-centers.halls.show', [$trainingCenter, $hall])
+            ->route('halls.index')
             ->with('success', 'Hall updated successfully.');
     }
 
     /**
      * Remove the specified hall from storage.
      */
-    public function destroy(TrainingCenter $trainingCenter, Hall $hall)
+    public function destroy(Hall $hall)
     {
         if ($hall->sessions()->exists()) {
             return back()->with('error', 'Cannot delete hall with existing sessions.');
@@ -109,7 +146,7 @@ class HallController extends Controller
         $hall->delete();
 
         return redirect()
-            ->route('training-centers.halls.index', $trainingCenter)
+            ->route('halls.index')
             ->with('success', 'Hall deleted successfully.');
     }
 }

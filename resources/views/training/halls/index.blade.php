@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Courses', 'sub_title' => 'All', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
+@extends('layouts.vertical', ['title' => 'Halls', 'sub_title' => 'List', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('content')
     <style>
@@ -9,21 +9,18 @@
     </style>
     <div class="grid grid-cols-12">
         <div class="col-span-12">
-
             <div class="overflow-x-auto">
                 <div class="min-w-full inline-block align-middle">
                     <div class="border rounded-lg divide-y divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
                         <div class="py-3 px-4 flex flex-wrap justify-between">
                             <div>
-
-                                <form method="GET" action="{{ route('courses.index') }}">
-                                    <div class="relative max-w-xs">
+                                <form method="GET" action="{{ route('web.halls.index') }}">
+                                    <div class="relative">
                                         <label for="table-search" class="sr-only">Search</label>
                                         <input type="text" name="search" id="table-search"
                                             value="{{ request('search') }}" class="form-input ps-11"
                                             placeholder="Search for items">
                                         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
-                                            <!-- Icon -->
                                             <svg class="h-3.5 w-3.5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
                                                 width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                 <path
@@ -34,10 +31,10 @@
                                 </form>
                             </div>
                             <div>
-                                <a href="{{ route('courses.create') }}"
-                                    class="btn border-primary text-primary hover:bg-primary hover:text-white">Create
-                                    Course</a>
-
+                                <a href="{{ route('web.halls.create') }}"
+                                    class="btn border-primary text-primary hover:bg-primary hover:text-white">
+                                    {{ __('Add New Hall') }}
+                                </a>
                             </div>
                         </div>
                         <div class="overflow-hidden">
@@ -52,24 +49,37 @@
                                             </div>
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Image') }}
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Name') }}
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Duration
-                                            Hrs</th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Training Center') }}
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Capacity') }}
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Price Per Hour') }}
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Available') }}
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">
+                                            {{ __('Actions') }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    @foreach ($courses as $course)
+                                    @forelse ($halls as $hall)
                                         <tr>
                                             <td class="py-3 ps-4">
                                                 <div class="flex items-center h-5">
@@ -79,69 +89,81 @@
                                                         class="sr-only">Checkbox</label>
                                                 </div>
                                             </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                @if ($hall->hasMedia('halls'))
+                                                    <img src="{{ $hall->getFirstMediaUrl('halls', 'thumb') }}"
+                                                        alt="{{ $hall->name }}" class="w-16 h-16 object-cover rounded">
+                                                @else
+                                                    <div
+                                                        class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                                        <i class="fas fa-image text-gray-400"></i>
+                                                    </div>
+                                                @endif
+                                            </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                {{ $course->title }}</td>
+                                                {{ $hall->name }}
+                                            </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                {{ $course->category->name }}</td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                                {{ $course->duration_hours }}
+                                                <a href="{{ route('web.training-centers.show', $hall->trainingCenter->id) }}"
+                                                    class="text-primary hover:underline">
+                                                    {{ $hall->trainingCenter->name }}
+                                                </a>
                                             </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                                {{ $course->price . '$' }}
+                                                {{ $hall->capacity }}
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                                                {{ number_format($hall->price_per_hour, 2) }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span
+                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $hall->available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    {{ $hall->available ? __('Available') : __('Unavailable') }}
+                                                </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <a class="text-primary hover:text-sky-700 mx-2"
-                                                    href="{{ route('courses.edit', ['course' => $course->id]) }}">Edit</a>
-                                                <form action="{{ route('courses.destroy', ['course' => $course->id]) }}"
-                                                    method="POST" style="display: inline"
-                                                    onsubmit="return confirm('Are you sure you want to delete this course?');">
+                                                    href="{{ route('web.halls.show', $hall->id) }}">
+                                                    {{ __('Show') }}
+                                                </a>
+                                                <a class="text-primary hover:text-sky-700 mx-2"
+                                                    href="{{ route('web.halls.edit', $hall->id) }}">
+                                                    {{ __('Edit') }}
+                                                </a>
+                                                <form action="{{ route('web.halls.destroy', $hall->id) }}" method="POST"
+                                                    class="inline"
+                                                    onsubmit="return confirm('{{ __('Are you sure you want to delete this hall?') }}');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
                                                         class="text-primary hover:text-red-700 bg-transparent border-none p-0 m-0 cursor-pointer">
-                                                        Delete
+                                                        {{ __('Delete') }}
                                                     </button>
                                                 </form>
                                             </td>
                                         </tr>
-                                    @endforeach
-
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500">
+                                                {{ __('No halls found.') }}
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
                         <div>
                             <div class="py-4 px-4">
-                                {{ $courses->appends(request()->query())->links() }}
+                                {{ $halls->appends(request()->query())->links() }}
                             </div>
                         </div>
-                        {{-- <div class="py-1 px-4">
-                            <nav class="flex items-center space-x-2">
-                                <a class="text-gray-400 hover:text-primary p-4 inline-flex items-center gap-2 font-medium rounded-md"
-                                    href="#">
-                                    <span aria-hidden="true">«</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="w-10 h-10 bg-primary text-white p-4 inline-flex items-center text-sm font-medium rounded-full"
-                                    href="#" aria-current="page">1</a>
-                                <a class="w-10 h-10 text-gray-400 hover:text-primary p-4 inline-flex items-center text-sm font-medium rounded-full"
-                                    href="#">2</a>
-                                <a class="w-10 h-10 text-gray-400 hover:text-primary p-4 inline-flex items-center text-sm font-medium rounded-full"
-                                    href="#">3</a>
-                                <a class="text-gray-400 hover:text-primary p-4 inline-flex items-center gap-2 font-medium rounded-md"
-                                    href="#">
-                                    <span class="sr-only">Next</span>
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </nav>
-                        </div> --}}
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

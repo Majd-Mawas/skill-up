@@ -25,7 +25,10 @@ class HallController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'capacity' => 'required|integer|min:1',
+            'price_per_hour' => 'required|numeric|min:0',
+            'available' => 'boolean',
             'training_center_id' => 'required|exists:training_centers,id',
         ]);
 
@@ -42,7 +45,10 @@ class HallController extends BaseController
      */
     public function show(Hall $hall)
     {
-        return $this->sendResponse(new HallResource($hall->load(['trainingCenter'])), 'Hall retrieved successfully.');
+        return $this->sendResponse(
+            new HallResource($hall->load(['trainingCenter'])),
+            'Hall retrieved successfully.'
+        );
     }
 
     /**
@@ -52,7 +58,10 @@ class HallController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
             'capacity' => 'sometimes|required|integer|min:1',
+            'price_per_hour' => 'sometimes|required|numeric|min:0',
+            'available' => 'boolean',
             'training_center_id' => 'sometimes|required|exists:training_centers,id',
         ]);
 
@@ -69,6 +78,10 @@ class HallController extends BaseController
      */
     public function destroy(Hall $hall)
     {
+        if ($hall->sessions()->exists()) {
+            return $this->sendError('Cannot delete hall with existing sessions.', [], 422);
+        }
+
         $hall->delete();
         return $this->sendResponse(null, 'Hall deleted successfully.');
     }

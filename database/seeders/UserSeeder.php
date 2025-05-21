@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'phone_number' => '0500000000',
+            'phone_number' => '+963960965509',
             'password' => Hash::make('password'),
             'area_id' => 1,
             'email_verified_at' => now(),
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             $trainer = User::create([
                 'name' => "Trainer {$i}",
                 'email' => "trainer{$i}@example.com",
-                'phone_number' => "05000000{$i}",
+                'phone_number' => '+9639' . fake()->unique()->numberBetween(31000000, 99999999),
                 'password' => Hash::make('password'),
                 'area_id' => rand(1, 5),
                 'email_verified_at' => now(),
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             $student = User::create([
                 'name' => "Student {$i}",
                 'email' => "student{$i}@example.com",
-                'phone_number' => "0500000{$i}",
+                'phone_number' => "+9639" . fake()->unique()->numberBetween(31000000, 99999999),
                 'password' => Hash::make('password'),
                 'area_id' => rand(1, 5),
                 'email_verified_at' => now(),
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
             $evaluator = User::create([
                 'name' => "Evaluator {$i}",
                 'email' => "evaluator{$i}@example.com",
-                'phone_number' => "050000{$i}",
+                'phone_number' => "+9639" . fake()->unique()->numberBetween(31000000, 99999999),
                 'password' => Hash::make('password'),
                 'area_id' => rand(1, 5),
                 'email_verified_at' => now(),

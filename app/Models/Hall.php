@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Hall extends Model implements HasMedia
 {
@@ -14,20 +15,37 @@ class Hall extends Model implements HasMedia
 
     protected $fillable = [
         'name',
-        'capacity',
-        'training_center_id',
         'description',
-        'amenities',
-        'is_active',
-        'floor_number',
-        'room_number'
+        'capacity',
+        'price_per_hour',
+        'available',
+        'training_center_id',
     ];
 
     protected $casts = [
-        'amenities' => 'array',
-        'is_active' => 'boolean',
-        'capacity' => 'integer'
+        'capacity' => 'integer',
+        'price_per_hour' => 'decimal:2',
+        'available' => 'boolean',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('halls')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200)
+            ->sharpen(10);
+
+        $this->addMediaConversion('medium')
+            ->width(400)
+            ->height(400)
+            ->sharpen(10);
+    }
 
     public function trainingCenter()
     {

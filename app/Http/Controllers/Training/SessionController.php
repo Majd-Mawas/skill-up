@@ -51,7 +51,7 @@ class SessionController extends Controller
         $session = $course->sessions()->create($validated);
 
         return redirect()
-            ->route('courses.sessions.show', [$course, $session])
+            ->route('web.courses.sessions.show', [$course, $session])
             ->with('success', 'Session created successfully.');
     }
 
@@ -93,7 +93,7 @@ class SessionController extends Controller
         $session->update($validated);
 
         return redirect()
-            ->route('courses.sessions.show', [$course, $session])
+            ->route('web.courses.sessions.show', [$course, $session])
             ->with('success', 'Session updated successfully.');
     }
 
@@ -109,7 +109,7 @@ class SessionController extends Controller
         $session->delete();
 
         return redirect()
-            ->route('courses.sessions.index', $course)
+            ->route('web.courses.sessions.index', $course)
             ->with('success', 'Session deleted successfully.');
     }
 }

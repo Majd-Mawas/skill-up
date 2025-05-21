@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InvoiceFactory extends Factory
@@ -11,7 +12,7 @@ class InvoiceFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory(),
             'course_id' => \App\Models\Course::factory(),
-            'training_center_id' => \App\Models\TrainingCenter::factory(),
+            'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
             'payment_id' => null,
             'invoice_number' => fake()->unique()->numerify('INV-#####'),
             'subtotal' => $subtotal = fake()->numberBetween(100, 1000),

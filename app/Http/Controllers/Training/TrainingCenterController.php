@@ -14,11 +14,16 @@ class TrainingCenterController extends Controller
      */
     public function index()
     {
-        $trainingCenters = TrainingCenter::withCount(['courses', 'halls'])
+        $trainingCenters = TrainingCenter::with(['area'])
+            ->when(request('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })
             ->latest()
             ->paginate(10);
 
-        return view('training.centers.index', compact('trainingCenters'));
+        return view('training.training-centers.index', compact('trainingCenters'));
     }
 
     /**
@@ -26,7 +31,8 @@ class TrainingCenterController extends Controller
      */
     public function create()
     {
-        return view('training.centers.create');
+        $areas = \App\Models\Area::all();
+        return view('training.training-centers.create', compact('areas'));
     }
 
     /**
@@ -37,19 +43,18 @@ class TrainingCenterController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:training_centers'],
-            'description' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone_number' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
-            'status' => ['required', 'in:active,inactive'],
-            'capacity' => ['required', 'integer', 'min:1'],
+            'area_id' => ['required', 'exists:areas,id'],
+            'status' => ['required', 'string', 'in:active,inactive'],
         ]);
 
         $trainingCenter = TrainingCenter::create($validated);
 
         return redirect()
-            ->route('training-centers.show', $trainingCenter)
+            ->route('web.training-centers.index', $trainingCenter)
             ->with('success', 'Training center created successfully.');
     }
 
@@ -58,13 +63,8 @@ class TrainingCenterController extends Controller
      */
     public function show(TrainingCenter $trainingCenter)
     {
-        $trainingCenter->load(['courses' => function ($query) {
-            $query->latest()->paginate(10);
-        }, 'halls' => function ($query) {
-            $query->latest()->paginate(10);
-        }]);
-
-        return view('training.centers.show', compact('trainingCenter'));
+        $trainingCenter->load(['area', 'halls']);
+        return view('training.training-centers.show', compact('trainingCenter'));
     }
 
     /**
@@ -72,7 +72,8 @@ class TrainingCenterController extends Controller
      */
     public function edit(TrainingCenter $trainingCenter)
     {
-        return view('training.centers.edit', compact('trainingCenter'));
+        $areas = \App\Models\Area::all();
+        return view('training.training-centers.edit', compact('trainingCenter', 'areas'));
     }
 
     /**
@@ -83,19 +84,18 @@ class TrainingCenterController extends Controller
     public function update(Request $request, TrainingCenter $trainingCenter)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:training_centers,name,' . $trainingCenter->id],
-            'description' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone_number' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
-            'status' => ['required', 'in:active,inactive'],
-            'capacity' => ['required', 'integer', 'min:1'],
+            'area_id' => ['required', 'exists:areas,id'],
+            'status' => ['required', 'string', 'in:active,inactive'],
         ]);
 
         $trainingCenter->update($validated);
 
         return redirect()
-            ->route('training-centers.show', $trainingCenter)
+            ->route('web.training-centers.show', $trainingCenter)
             ->with('success', 'Training center updated successfully.');
     }
 
@@ -104,14 +104,14 @@ class TrainingCenterController extends Controller
      */
     public function destroy(TrainingCenter $trainingCenter)
     {
-        if ($trainingCenter->courses()->exists() || $trainingCenter->halls()->exists()) {
-            return back()->with('error', 'Cannot delete training center with existing courses or halls.');
+        if ($trainingCenter->halls()->exists()) {
+            return back()->with('error', 'Cannot delete training center with existing halls.');
         }
 
         $trainingCenter->delete();
 
         return redirect()
-            ->route('training-centers.index')
+            ->route('web.training-centers.index')
             ->with('success', 'Training center deleted successfully.');
     }
 }

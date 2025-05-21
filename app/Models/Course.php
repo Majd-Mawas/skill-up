@@ -66,4 +66,28 @@ class Course extends Model
     {
         return $this->hasMany(PlacementTestRecommendation::class);
     }
+
+    /**
+     * Get the levels for the course.
+     */
+    public function levels()
+    {
+        return $this->hasMany(CourseLevel::class)->ordered();
+    }
+
+    /**
+     * Get the first level of the course.
+     */
+    public function firstLevel()
+    {
+        return $this->levels()->orderBy('level_order')->first();
+    }
+
+    /**
+     * Get the last level of the course.
+     */
+    public function lastLevel()
+    {
+        return $this->levels()->orderByDesc('level_order')->first();
+    }
 }

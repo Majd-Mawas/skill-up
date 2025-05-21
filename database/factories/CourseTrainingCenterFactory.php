@@ -12,7 +12,7 @@ class CourseTrainingCenterFactory extends Factory
     {
         return [
             'course_id' => Course::factory(),
-            'training_center_id' => TrainingCenter::factory(),
+            'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
             'price' => fake()->numberBetween(100, 1000),
         ];
     }

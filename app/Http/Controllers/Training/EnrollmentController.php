@@ -78,7 +78,7 @@ class EnrollmentController extends Controller
         $enrollment->sessions()->attach($validated['session_ids']);
 
         return redirect()
-            ->route('courses.enrollments.show', [$course, $enrollment])
+            ->route('web.courses.enrollments.show', [$course, $enrollment])
             ->with('success', 'Enrollment created successfully.');
     }
 
@@ -139,7 +139,7 @@ class EnrollmentController extends Controller
         $enrollment->sessions()->sync($validated['session_ids']);
 
         return redirect()
-            ->route('courses.enrollments.show', [$course, $enrollment])
+            ->route('web.courses.enrollments.show', [$course, $enrollment])
             ->with('success', 'Enrollment updated successfully.');
     }
 
@@ -151,7 +151,7 @@ class EnrollmentController extends Controller
         $enrollment->delete();
 
         return redirect()
-            ->route('courses.enrollments.index', $course)
+            ->route('web.courses.enrollments.index', $course)
             ->with('success', 'Enrollment deleted successfully.');
     }
 }

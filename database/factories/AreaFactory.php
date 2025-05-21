@@ -9,8 +9,8 @@ class AreaFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->city(),
-            'description' => fake()->paragraph(),
+            // 'name' => fake()->unique()->city(),
+            // 'description' => fake()->paragraph(),
         ];
     }
 }

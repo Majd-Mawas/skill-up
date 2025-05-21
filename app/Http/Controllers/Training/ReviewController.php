@@ -80,7 +80,7 @@ class ReviewController extends Controller
         ]);
 
         return redirect()
-            ->route('courses.reviews.show', [$course, $review])
+            ->route('web.courses.reviews.show', [$course, $review])
             ->with('success', 'Review created successfully.');
     }
 
@@ -127,7 +127,7 @@ class ReviewController extends Controller
         $review->update($validated);
 
         return redirect()
-            ->route('courses.reviews.show', [$course, $review])
+            ->route('web.courses.reviews.show', [$course, $review])
             ->with('success', 'Review updated successfully.');
     }
 
@@ -144,7 +144,7 @@ class ReviewController extends Controller
         $review->delete();
 
         return redirect()
-            ->route('courses.reviews.index', $course)
+            ->route('web.courses.reviews.index', $course)
             ->with('success', 'Review deleted successfully.');
     }
 }
