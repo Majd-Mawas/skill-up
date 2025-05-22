@@ -18,5 +18,20 @@
     "key": "المفتاح",
     "Actions": "الإجراءات",
     "translate": "translate",
-    "Delete": "حذف"
+    "Delete": "حذف",
+    "Categories": "التصنيفات",
+    "List": "القائمة",
+    "Create": "إنشاء",
+    "Edit": "تعديل",
+    "Description": "الوصف",
+    "Courses": "الدورات",
+    "Created At": "تاريخ الإنشاء",
+    "Add Category": "إضافة تصنيف",
+    "Search categories...": "البحث في التصنيفات...",
+    "No categories found.": "لم يتم العثور على تصنيفات.",
+    "Are you sure you want to delete this category?": "هل أنت متأكد من حذف هذا التصنيف؟",
+    "Category created successfully.": "تم إنشاء التصنيف بنجاح.",
+    "Category updated successfully.": "تم تحديث التصنيف بنجاح.",
+    "Category deleted successfully.": "تم حذف التصنيف بنجاح.",
+    "Cannot delete category with existing courses.": "لا يمكن حذف التصنيف لوجود دورات مرتبطة به."
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Services\TwilioService;
+use Illuminate\Support\Facades\Auth;
 
 class PhonePasswordResetController extends Controller
 {
@@ -107,16 +108,21 @@ class PhonePasswordResetController extends Controller
         }
 
         // Verify the code again just to be safe
-        $twilioService = app(TwilioService::class);
-        $result = $twilioService->checkVerification($request->phone_number, $request->code);
+        // $twilioService = app(TwilioService::class);
+        // $result = $twilioService->checkVerification($request->phone_number, $request->code);
 
-        if (!$result['success'] || $result['status'] !== 'approved') {
-            return back()->withErrors(['code' => 'Invalid verification code.']);
-        }
+        // if (!$result['success'] || $result['status'] !== 'approved') {
+        //     return back()->withErrors(['code' => 'Invalid verification code.']);
+        // }
 
         $user->resetPassword($request->password);
 
-        return redirect()->route('login')
-            ->with('status', 'Your password has been reset successfully.');
+        // Log the user in
+        Auth::login($user);
+
+        // return redirect()->route('login')
+        //     ->with('status', 'Your password has been reset successfully.');
+        return redirect()->route('home')
+            ->with('status', 'Your password has been reset successfully and you are now logged in.');
     }
 }

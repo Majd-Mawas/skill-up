@@ -5,6 +5,7 @@ use App\Http\Controllers\RoutingController;
 use App\Http\Controllers\Training\HallController;
 use App\Http\Controllers\Training\CourseLevelController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,17 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/phone-verification.php';
 require __DIR__ . '/training.php';
 
+Route::get('lang/{locale}', function ($locale) {
+    if (!in_array($locale, ['en', 'ar'])) {
+        abort(400);
+    }
+
+    session(['locale' => $locale]);
+    app()->setLocale($locale);
+
+    return redirect()->back();
+})->name('lang.switch');
+
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     Route::name('web.')->group(function () {
         Route::resource('halls', HallController::class);
@@ -34,6 +46,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::post('courses/{course}/levels/reorder', [CourseLevelController::class, 'reorder'])->name('courses.levels.reorder');
         });
         Route::resource('users', UserController::class);
+        Route::resource('categories', CategoryController::class);
     });
     Route::get('', [RoutingController::class, 'index'])->name('root');
     Route::get('/home', fn() => view('index'))->name('home');
@@ -42,16 +55,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     Route::get('{any}', [RoutingController::class, 'root'])->name('any');
 });
 
-Route::get('lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'ar'])) {
-        abort(400); // Invalid language
-    }
 
-    session(['locale' => $locale]);
-    app()->setLocale($locale);
-
-    return redirect()->back();
-})->name('lang.switch');
 
 // Course Levels Routes
 Route::middleware(['auth'])->group(function () {});

@@ -55,24 +55,13 @@
                     <span class="menu-text"> Users </span>
                 </a>
             </li>
-            {{-- <li class="menu-item">
-                <a href="{{ route('web.instructors.index') }}" class="menu-link">
-                    <span class="menu-icon"><i class="mgc_teacher_line"></i></span>
-                    <span class="menu-text"> Instructors </span>
-                </a>
-            </li>
+
             <li class="menu-item">
                 <a href="{{ route('web.categories.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_grid_line"></i></span>
                     <span class="menu-text"> Categories </span>
                 </a>
-            </li> --}}
-            {{-- <li class="menu-item">
-                <a href="{{ route('companies.index') }}" class="menu-link">
-                    <span class="menu-icon"><i class="mgc_building_5_line"></i></span>
-                    <span class="menu-text"> Companies </span>
-                </a>
-            </li> --}}
+            </li>
             @if (env('APP_DEBUG'))
                 <li class="menu-title">Custom</li>
 

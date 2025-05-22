@@ -18,5 +18,20 @@
     "key": "key",
     "Actions": "Actions",
     "translate": "translate",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Categories": "Categories",
+    "List": "List",
+    "Create": "Create",
+    "Edit": "Edit",
+    "Description": "Description",
+    "Courses": "Courses",
+    "Created At": "Created At",
+    "Add Category": "Add Category",
+    "Search categories...": "Search categories...",
+    "No categories found.": "No categories found.",
+    "Are you sure you want to delete this category?": "Are you sure you want to delete this category?",
+    "Category created successfully.": "Category created successfully.",
+    "Category updated successfully.": "Category updated successfully.",
+    "Category deleted successfully.": "Category deleted successfully.",
+    "Cannot delete category with existing courses.": "Cannot delete category with existing courses."
 }
