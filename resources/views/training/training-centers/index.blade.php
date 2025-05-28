@@ -110,6 +110,10 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <a class="text-primary hover:text-sky-700 mx-2"
+                                                    href="{{ route('web.training-centers.show', $trainingCenter->id) }}">
+                                                    {{ __('Show') }}
+                                                </a>
+                                                <a class="text-primary hover:text-sky-700 mx-2"
                                                     href="{{ route('web.training-centers.edit', ['training_center' => $trainingCenter->id]) }}">
                                                     Edit
                                                 </a>

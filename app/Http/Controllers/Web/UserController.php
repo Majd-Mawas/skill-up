@@ -14,7 +14,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles')->latest()->paginate(10);
+        $users = User::with('roles')
+            ->whereHas('roles', function($query) {
+                $query->where('name', 'student');
+            })
+            ->latest()
+            ->paginate(10);
+
         return view('web.users.index', compact('users'));
     }
 

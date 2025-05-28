@@ -25,7 +25,7 @@
                                 {{ __('Status') }}
                             </label>
                             <p class="mt-1">
-                                @if($trainingCenter->status === 'active')
+                                @if ($trainingCenter->status === 'active')
                                     <span class="px-4 py-2 text-sm font-medium rounded-full bg-green-100 text-green-800">
                                         {{ ucfirst($trainingCenter->status) }}
                                     </span>
@@ -105,15 +105,20 @@
                                             <td class="py-2">{{ $hall->capacity }}</td>
                                             <td class="py-2">{{ number_format($hall->price_per_hour, 2) }}</td>
                                             <td class="py-4">
-                                                <div class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium {{ $hall->available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                    @if($hall->available)
+                                                <div
+                                                    class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium {{ $hall->available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    @if ($hall->available)
                                                         <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                            <path fill-rule="evenodd"
+                                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                clip-rule="evenodd" />
                                                         </svg>
                                                         {{ __('Available') }}
                                                     @else
                                                         <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                            <path fill-rule="evenodd"
+                                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                                clip-rule="evenodd" />
                                                         </svg>
                                                         {{ __('Unavailable') }}
                                                     @endif
@@ -136,6 +141,54 @@
                                         <tr>
                                             <td colspan="6" class="text-center py-4">
                                                 {{ __('No halls found for this training center.') }}
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Associated Course -->
+                    <div class="mt-6">
+                        <label class="text-gray-800 text-sm font-medium inline-block mb-2">
+                            {{ __('Associated Courses') }}
+                        </label>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">{{ __('Name') }}</th>
+                                        <th class="text-left"> {{ __('Category') }}</th>
+                                        <th class="text-left">{{ __('Description') }}</th>
+                                        <th class="text-left">{{ __('Price') }}</th>
+                                        <th class="text-left">{{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($trainingCenter->courses as $course)
+                                        <tr>
+                                            <td class="py-2">{{ $course->name }}</td>
+                                            <td class="py-2">{{ $course->category->name }}</td>
+                                            <td class="py-2">{{ Str::limit($course->description, 50) }}</td>
+                                            <td class="py-2">{{ $course->pivot->price }}</td>
+                                            <td class="py-2">
+                                                <div class="flex space-x-2">
+                                                    <a href="{{ route('web.courses.show', $course->id) }}"
+                                                        class="btn btn-sm bg-info text-white">
+                                                        <i class="mgc_eye_line"></i>
+                                                    </a>
+                                                    <a href="{{ route('web.courses.edit', $course->id) }}"
+                                                        class="btn btn-sm bg-primary text-white">
+                                                        <i class="mgc_edit_line"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4">
+                                                {{ __('No courses found for this training center.') }}
                                             </td>
                                         </tr>
                                     @endforelse

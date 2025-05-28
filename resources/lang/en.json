@@ -33,5 +33,7 @@
     "Category created successfully.": "Category created successfully.",
     "Category updated successfully.": "Category updated successfully.",
     "Category deleted successfully.": "Category deleted successfully.",
-    "Cannot delete category with existing courses.": "Cannot delete category with existing courses."
+    "Cannot delete category with existing courses.": "Cannot delete category with existing courses.",
+    "Associated Halls": "Associated Halls",
+    "Associated Courses": "Associated Courses"
 }

@@ -33,5 +33,7 @@
     "Category created successfully.": "تم إنشاء التصنيف بنجاح.",
     "Category updated successfully.": "تم تحديث التصنيف بنجاح.",
     "Category deleted successfully.": "تم حذف التصنيف بنجاح.",
-    "Cannot delete category with existing courses.": "لا يمكن حذف التصنيف لوجود دورات مرتبطة به."
+    "Cannot delete category with existing courses.": "لا يمكن حذف التصنيف لوجود دورات مرتبطة به.",
+    "Associated Halls": "القاعات المرتبطة",
+    "Associated Courses": "الدورات المرتبطة"
 }

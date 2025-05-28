@@ -63,7 +63,10 @@ class TrainingCenterController extends Controller
      */
     public function show(TrainingCenter $trainingCenter)
     {
-        $trainingCenter->load(['area', 'halls']);
+
+        $trainingCenter->load(['area', 'halls','courses']);
+        // return $trainingCenter;
+
         return view('training.training-centers.show', compact('trainingCenter'));
     }
 
