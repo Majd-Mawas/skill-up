@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
-    use ApiResponse;
+
 
     /**
      * Handle an incoming authentication request.

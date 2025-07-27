@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules;
 
 class PasswordResetController extends Controller
 {
-    use ApiResponse;
+
 
     /**
      * Request password reset code

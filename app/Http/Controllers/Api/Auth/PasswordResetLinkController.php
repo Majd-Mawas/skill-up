@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class PasswordResetLinkController extends Controller
 {
-    use ApiResponse;
+
 
     /**
      * Handle an incoming password reset link request.

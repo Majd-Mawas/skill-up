@@ -5,15 +5,29 @@ use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\Auth\PhoneVerificationController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\InterestController;
+use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
+// Public routes
 Route::prefix('v1')->name('api.v1.')->group(function () {
+    // Interests (public for registration)
     Route::get('interests', [InterestController::class, 'index']);
     Route::get('interests/{interest}', [InterestController::class, 'show']);
 });
 
-Route::middleware('auth:sanctum')->prefix('v1')->group(function () {});
+// Protected routes
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    // User Profile Management
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserProfileController::class, 'show']);
+        Route::put('/', [UserProfileController::class, 'update']);
+        Route::post('avatar', [UserProfileController::class, 'uploadAvatar']);
+        Route::delete('avatar', [UserProfileController::class, 'deleteAvatar']);
+        Route::put('password', [UserProfileController::class, 'changePassword']);
+    });
+});
 
+// Authentication routes (Guest)
 Route::prefix('auth')->middleware('guest')->group(function () {
     Route::post('/register', [RegisteredUserController::class, 'store']);
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);

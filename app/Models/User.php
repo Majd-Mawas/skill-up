@@ -9,17 +9,34 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Traits\HasPhoneVerification;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, HasPhoneVerification, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasPhoneVerification, SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'email',
+        'gender',
+        'study',
+        'phone_number',
+        'password',
+        'area_id',
+        'email_verified_at',
+        'phone_verified',
+        'phone_verification_code',
+        'phone_verification_code_expires_at',
+        'password_reset_code',
+        'password_reset_code_expires_at'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -47,6 +64,58 @@ class User extends Authenticatable
         'password_reset_code_expires_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Define media collections for the user.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    /**
+     * Define media conversions for the user.
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(150)
+            ->height(150)
+            ->sharpen(10)
+            ->performOnCollections('avatar');
+
+        $this->addMediaConversion('medium')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10)
+            ->performOnCollections('avatar');
+    }
+
+    /**
+     * Get the user's avatar URL.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('avatar');
+    }
+
+    /**
+     * Get the user's avatar thumbnail URL.
+     */
+    public function getAvatarThumbUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('avatar', 'thumb');
+    }
+
+    /**
+     * Get the user's avatar medium URL.
+     */
+    public function getAvatarMediumUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('avatar', 'medium');
+    }
 
     public function area()
     {

@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class RegisteredUserController extends Controller
 {
-    use ApiResponse;
+
 
     /**
      * Handle an incoming registration request.

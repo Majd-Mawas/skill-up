@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class NewPasswordController extends Controller
 {
-    use ApiResponse;
+
 
     /**
      * Handle an incoming new password request.

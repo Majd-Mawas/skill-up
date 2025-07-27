@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class PhoneVerificationController extends Controller
 {
-    use ApiResponse;
+
 
     /**
      * Send verification code to user's phone
