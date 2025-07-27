@@ -6,85 +6,48 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 
 trait ApiResponse
 {
-    /**
-     * Return a success response.
-     *
-     * @param  mixed  $data
-     * @param  string|null  $message
-     * @param  int  $statusCode
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function successResponse($data, ?string $message = null, int $statusCode = 200): JsonResponse
+    protected function successResponse($data, ?string $message = null, int $code = 200): JsonResponse
     {
-        $response = [
+        return response()->json([
             'success' => true,
             'message' => $message,
-            'data' => $data
-        ];
-
-        return response()->json($response, $statusCode);
+            'data' => $data instanceof JsonResource ? $data->response()->getData(true)['data'] : $data,
+            'meta' => $this->getMetaData($data)
+        ], $code);
     }
 
-    /**
-     * Return an error JSON response.
-     *
-     * @param  string  $message
-     * @param  int  $code
-     * @param  array|string|null  $errors
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorResponse(string $message = 'Error', int $code = 400, $errors = null): JsonResponse
+    protected function errorResponse(string $message, int $code, $errors = null): JsonResponse
     {
         $response = [
             'success' => false,
             'message' => $message,
         ];
 
-        if ($errors !== null) {
+        if ($errors instanceof ValidationException) {
+            $response['errors'] = $errors->errors();
+            $code = 422;
+        } elseif ($errors !== null) {
             $response['errors'] = $errors;
         }
 
         return response()->json($response, $code);
     }
 
-    /**
-     * Format the data for the response.
-     *
-     * @param  mixed  $data
-     * @return mixed
-     */
-    protected function formatData($data)
+    protected function getMetaData($data): ?array
     {
-        if ($data instanceof JsonResource) {
-            return $data->response()->getData(true)['data'];
-        }
-
-        if ($data instanceof ResourceCollection) {
-            return $data->response()->getData(true);
-        }
-
-        if ($data instanceof LengthAwarePaginator) {
+        if ($data instanceof ResourceCollection && $data->resource instanceof LengthAwarePaginator) {
             return [
-                'data' => $data->items(),
-                'pagination' => [
-                    'total' => $data->total(),
-                    'per_page' => $data->perPage(),
-                    'current_page' => $data->currentPage(),
-                    'last_page' => $data->lastPage(),
-                    'from' => $data->firstItem(),
-                    'to' => $data->lastItem(),
-                ],
+                'current_page' => $data->resource->currentPage(),
+                'last_page' => $data->resource->lastPage(),
+                'per_page' => $data->resource->perPage(),
+                'total' => $data->resource->total(),
             ];
         }
 
-        if ($data instanceof Collection) {
-            return $data->toArray();
-        }
-
-        return $data;
+        return null;
     }
 }

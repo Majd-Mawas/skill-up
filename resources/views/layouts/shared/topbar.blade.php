@@ -33,7 +33,7 @@
     </button> --}}
 
     <!-- Language Dropdown Button -->
-    <div class="relative">
+    {{-- <div class="relative">
         <button data-fc-type="dropdown" data-fc-placement="bottom-end" type="button" class="nav-link p-2 fc-dropdown">
             <span class="flex items-center justify-center h-6 w-6">
                 <img src="/images/flags/{{ app()->getLocale() == 'ar' ? 'arabic.png' : 'us.jpg' }}" alt="user-image"
@@ -55,7 +55,7 @@
                 <span class="align-middle">Arabic</span>
             </a>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Fullscreen Toggle Button -->
     <div class="md:flex hidden">
@@ -201,7 +201,7 @@
         </button>
         <div
             class="fc-dropdown fc-dropdown-open:opacity-100 hidden opacity-0 w-44 z-50 transition-[margin,opacity] duration-300 mt-2 bg-white shadow-lg border rounded-lg p-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800">
-            <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+            {{-- <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                 href="pages-gallery.html">
                 <i class="mgc_pic_2_line  me-2"></i>
                 <span>Gallery</span>
@@ -216,7 +216,7 @@
                 <i class="mgc_lock_line  me-2"></i>
                 <span>Lock Screen</span>
             </a>
-            <hr class="my-2 -mx-2 border-gray-200 dark:border-gray-700">
+            <hr class="my-2 -mx-2 border-gray-200 dark:border-gray-700"> --}}
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
                 <button type="submit"
