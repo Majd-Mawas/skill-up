@@ -5,19 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Course extends Model
+class Course extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'name',
         'description',
         'category_id',
+        'duration_hours',
+        'difficulty_level',
+        'prerequisites',
+        'learning_outcomes',
+        'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'is_active' => 'boolean',
+        'learning_outcomes' => 'array',
+        'prerequisites' => 'array',
     ];
 
     public function category()
@@ -89,5 +100,93 @@ class Course extends Model
     public function lastLevel()
     {
         return $this->levels()->orderByDesc('level_order')->first();
+    }
+
+    /**
+     * Define media collections for the course.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('thumbnail')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
+        $this->addMediaCollection('gallery')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
+        $this->addMediaCollection('materials')
+            ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+    }
+
+    /**
+     * Define media conversions.
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(150)
+            ->height(150)
+            ->sharpen(10);
+
+        $this->addMediaConversion('medium')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10);
+
+        $this->addMediaConversion('large')
+            ->width(800)
+            ->height(600)
+            ->sharpen(10);
+    }
+
+    /**
+     * Get the course's thumbnail URL.
+     */
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('thumbnail');
+    }
+
+    /**
+     * Get the course's thumbnail thumb URL.
+     */
+    public function getThumbnailThumbUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('thumbnail', 'thumb');
+    }
+
+    /**
+     * Get the course's thumbnail medium URL.
+     */
+    public function getThumbnailMediumUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('thumbnail', 'medium');
+    }
+
+    /**
+     * Scope for active courses.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope for filtering by category.
+     */
+    public function scopeByCategory($query, $categorySlug)
+    {
+        return $query->whereHas('category', function ($q) use ($categorySlug) {
+            $q->where('slug', $categorySlug)->orWhere('name', 'like', '%' . $categorySlug . '%');
+        });
+    }
+
+    /**
+     * Scope for searching courses.
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
     }
 }

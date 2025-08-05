@@ -2,81 +2,165 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Course\StoreCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class CourseController extends BaseController
+class CourseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of courses.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        $courses = Course::with(['category', 'trainingCenter'])->paginate(10);
-        return $this->sendResponse(CourseResource::collection($courses), 'Courses retrieved successfully.');
-    }
+        $query = Course::with(['category', 'trainingCenters'])
+            ->withCount(['enrollments', 'reviews']);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'training_center_id' => 'required|exists:training_centers,id',
-            'price' => 'required|numeric|min:0',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $query->search($request->search);
         }
 
-        $course = Course::create($request->all());
-        return $this->sendResponse(new CourseResource($course), 'Course created successfully.');
-    }
+        // Filter by category
+        // if ($request->has('category')) {
+        //     $query->byCategory($request->category);
+        // }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Course $course)
-    {
-        return $this->sendResponse(
-            new CourseResource($course->load(['category', 'trainingCenter'])),
-            'Course retrieved successfully.'
+        // // Filter by difficulty level
+        // if ($request->has('difficulty')) {
+        //     $query->where('difficulty_level', $request->difficulty);
+        // }
+
+        // // Filter by active status
+        // if ($request->has('active')) {
+        //     $query->where('is_active', $request->boolean('active'));
+        // }
+
+        // // Only show active courses by default
+        // if (!$request->has('include_inactive')) {
+        //     $query->active();
+        // }
+
+        $courses = $query->paginate($request->get('per_page', 15));
+
+        return $this->successResponse(
+            CourseResource::collection($courses),
+            'Courses retrieved successfully'
         );
     }
 
     /**
-     * Update the specified resource in storage.
+     * Store a newly created course.
      */
-    public function update(Request $request, Course $course)
+    public function store(StoreCourseRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'sometimes|required|exists:categories,id',
-            'training_center_id' => 'sometimes|required|exists:training_centers,id',
-            'price' => 'sometimes|required|numeric|min:0',
-        ]);
+        try {
+            $course = Course::create($request->validated());
 
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
+            // Handle thumbnail upload
+            if ($request->hasFile('thumbnail')) {
+                $course->addMediaFromRequest('thumbnail')
+                    ->toMediaCollection('thumbnail');
+            }
+
+            // Handle gallery uploads
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $course->addMedia($file)
+                        ->toMediaCollection('gallery');
+                }
+            }
+
+            $course->load(['category', 'trainingCenters']);
+
+            return $this->successResponse(
+                new CourseResource($course),
+                'Course created successfully',
+                201
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Failed to create course: ' . $e->getMessage(),
+                500
+            );
         }
-
-        $course->update($request->all());
-        return $this->sendResponse(new CourseResource($course), 'Course updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Display the specified course.
      */
-    public function destroy(Course $course)
+    public function show(Course $course): JsonResponse
     {
-        $course->delete();
-        return $this->sendResponse(null, 'Course deleted successfully.');
+        $course->load(['category', 'trainingCenters', 'levels', 'reviews'])
+            ->loadCount(['enrollments', 'reviews']);
+
+        return $this->successResponse(
+            new CourseResource($course),
+            'Course retrieved successfully'
+        );
+    }
+
+    /**
+     * Update the specified course.
+     */
+    public function update(StoreCourseRequest $request, Course $course): JsonResponse
+    {
+        try {
+            $course->update($request->validated());
+
+            // Handle thumbnail upload
+            if ($request->hasFile('thumbnail')) {
+                $course->clearMediaCollection('thumbnail');
+                $course->addMediaFromRequest('thumbnail')
+                    ->toMediaCollection('thumbnail');
+            }
+
+            // Handle gallery uploads
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $course->addMedia($file)
+                        ->toMediaCollection('gallery');
+                }
+            }
+
+            $course->load(['category', 'trainingCenters']);
+
+            return $this->successResponse(
+                new CourseResource($course),
+                'Course updated successfully'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Failed to update course: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    /**
+     * Remove the specified course.
+     */
+    public function destroy(Course $course): JsonResponse
+    {
+        try {
+            $course->clearMediaCollection('thumbnail');
+            $course->clearMediaCollection('gallery');
+            $course->clearMediaCollection('materials');
+            $course->delete();
+
+            return $this->successResponse(
+                null,
+                'Course deleted successfully'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Failed to delete course: ' . $e->getMessage(),
+                500
+            );
+        }
     }
 }

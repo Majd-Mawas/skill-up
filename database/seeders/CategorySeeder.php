@@ -11,24 +11,24 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name' => 'Information Technology',
-                'description' => 'Courses related to programming, networking, and computer science',
+                'name' => 'تكنولوجيا المعلومات',
+                'description' => 'دورات متعلقة بالبرمجة والشبكات وعلوم الكمبيوتر',
             ],
             [
-                'name' => 'Business Administration',
-                'description' => 'Courses covering management, marketing, and business operations',
+                'name' => 'إدارة الأعمال',
+                'description' => 'دورات تغطي الإدارة والتسويق وعمليات الأعمال',
             ],
             [
-                'name' => 'Language Learning',
-                'description' => 'Courses for learning different languages and communication skills',
+                'name' => 'تعلم اللغات',
+                'description' => 'دورات لتعلم اللغات المختلفة ومهارات التواصل',
             ],
             [
-                'name' => 'Professional Development',
-                'description' => 'Courses focused on career growth and professional skills',
+                'name' => 'التطوير المهني',
+                'description' => 'دورات تركز على النمو الوظيفي والمهارات المهنية',
             ],
             [
-                'name' => 'Technical Skills',
-                'description' => 'Courses teaching practical technical skills and certifications',
+                'name' => 'المهارات التقنية',
+                'description' => 'دورات لتعليم المهارات التقنية العملية والشهادات',
             ],
         ];
 

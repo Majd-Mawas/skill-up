@@ -18,6 +18,15 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'slug' => $this->slug,
+            'is_active' => $this->is_active,
+            // 'sort_order' => $this->sort_order,
+            'icon' => [
+                'original' => $this->icon_url,
+                'thumb' => $this->icon_thumb_url,
+                'medium' => $this->icon_medium_url,
+            ],
+            'courses_count' => $this->whenCounted('courses'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -2,80 +2,154 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Institute\StoreInstituteRequest;
 use App\Http\Resources\TrainingCenterResource;
 use App\Models\TrainingCenter;
+use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class TrainingCenterController extends BaseController
+class TrainingCenterController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of institutes.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        $trainingCenters = TrainingCenter::with(['area'])->paginate(10);
-        return $this->sendResponse(TrainingCenterResource::collection($trainingCenters), 'Training centers retrieved successfully.');
-    }
+        $query = TrainingCenter::with(['area'])
+            ->withCount(['courses', 'reviews']);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'phone_number' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'area_id' => 'required|exists:areas,id',
-            'status' => 'required|in:active,inactive',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $query->search($request->search);
         }
 
-        $trainingCenter = TrainingCenter::create($request->all());
-        return $this->sendResponse(new TrainingCenterResource($trainingCenter), 'Training center created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(TrainingCenter $trainingCenter)
-    {
-        return $this->sendResponse(new TrainingCenterResource($trainingCenter->load(['area'])), 'Training center retrieved successfully.');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TrainingCenter $trainingCenter)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'address' => 'sometimes|required|string',
-            'phone_number' => 'sometimes|required|string|max:20',
-            'email' => 'sometimes|required|email|max:255',
-            'area_id' => 'sometimes|required|exists:areas,id',
-            'status' => 'sometimes|required|in:active,inactive',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
+        // Filter by status
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
         }
 
-        $trainingCenter->update($request->all());
-        return $this->sendResponse(new TrainingCenterResource($trainingCenter), 'Training center updated successfully.');
+        // Filter by area
+        if ($request->has('area_id')) {
+            $query->where('area_id', $request->area_id);
+        }
+
+        $institutes = $query->paginate($request->get('per_page', 15));
+
+        return $this->successResponse(
+            TrainingCenterResource::collection($institutes),
+            'Institutes retrieved successfully'
+        );
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Store a newly created institute.
      */
-    public function destroy(TrainingCenter $trainingCenter)
+    public function store(StoreInstituteRequest $request): JsonResponse
     {
-        $trainingCenter->delete();
-        return $this->sendResponse(null, 'Training center deleted successfully.');
+        try {
+            $institute = TrainingCenter::create($request->validated());
+
+            // Handle logo upload
+            if ($request->hasFile('logo')) {
+                $institute->addMediaFromRequest('logo')
+                    ->toMediaCollection('logo');
+            }
+
+            // Handle gallery uploads
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $institute->addMedia($file)
+                        ->toMediaCollection('gallery');
+                }
+            }
+
+            $institute->load(['area']);
+
+            return $this->successResponse(
+                new TrainingCenterResource($institute),
+                'Institute created successfully',
+                201
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Failed to create institute: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    /**
+     * Display the specified institute.
+     */
+    public function show(TrainingCenter $trainingCenter): JsonResponse
+    {
+        $trainingCenter->load(['area', 'courses.category'])
+            ->loadCount(['courses', 'reviews']);
+
+        return $this->successResponse(
+            new TrainingCenterResource($trainingCenter),
+            'Institute retrieved successfully'
+        );
+    }
+
+    /**
+     * Update the specified institute.
+     */
+    public function update(StoreInstituteRequest $request, TrainingCenter $trainingCenter): JsonResponse
+    {
+        try {
+            $trainingCenter->update($request->validated());
+
+            // Handle logo upload
+            if ($request->hasFile('logo')) {
+                $trainingCenter->clearMediaCollection('logo');
+                $trainingCenter->addMediaFromRequest('logo')
+                    ->toMediaCollection('logo');
+            }
+
+            // Handle gallery uploads
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $trainingCenter->addMedia($file)
+                        ->toMediaCollection('gallery');
+                }
+            }
+
+            $trainingCenter->load(['area']);
+
+            return $this->successResponse(
+                new TrainingCenterResource($trainingCenter),
+                'Institute updated successfully'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Failed to update institute: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    /**
+     * Remove the specified institute.
+     */
+    public function destroy(TrainingCenter $trainingCenter): JsonResponse
+    {
+        try {
+            $trainingCenter->clearMediaCollection('logo');
+            $trainingCenter->clearMediaCollection('gallery');
+            $trainingCenter->delete();
+
+            return $this->successResponse(
+                null,
+                'Institute deleted successfully'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Failed to delete institute: ' . $e->getMessage(),
+                500
+            );
+        }
     }
 }
