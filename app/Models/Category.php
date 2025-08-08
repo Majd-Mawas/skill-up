@@ -16,12 +16,10 @@ class Category extends Model implements HasMedia
         'name',
         'description',
         'slug',
-        'is_active',
         // 'sort_order',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
         // 'sort_order' => 'integer',
     ];
 
@@ -78,14 +76,6 @@ class Category extends Model implements HasMedia
     public function getIconMediumUrlAttribute(): ?string
     {
         return $this->getFirstMediaUrl('icon', 'medium');
-    }
-
-    /**
-     * Scope for active categories.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
     }
 
     /**

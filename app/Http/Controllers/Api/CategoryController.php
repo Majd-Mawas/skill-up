@@ -19,16 +19,6 @@ class CategoryController extends Controller
     {
         $query = Category::withCount('courses');
 
-        // Filter by active status
-        if ($request->has('active')) {
-            $query->where('is_active', $request->boolean('active'));
-        }
-
-        // Only show active categories by default
-        if (!$request->has('include_inactive')) {
-            $query->active();
-        }
-
         $categories = $query->ordered()->paginate($request->get('per_page', 15));
 
         return $this->successResponse(

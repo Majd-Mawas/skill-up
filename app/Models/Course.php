@@ -21,12 +21,10 @@ class Course extends Model implements HasMedia
         'difficulty_level',
         'prerequisites',
         'learning_outcomes',
-        'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'is_active' => 'boolean',
         'learning_outcomes' => 'array',
         'prerequisites' => 'array',
     ];
@@ -163,13 +161,6 @@ class Course extends Model implements HasMedia
         return $this->getFirstMediaUrl('thumbnail', 'medium');
     }
 
-    /**
-     * Scope for active courses.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
 
     /**
      * Scope for filtering by category.

@@ -22,7 +22,6 @@ class CourseResource extends JsonResource
             'difficulty_level' => $this->difficulty_level,
             'prerequisites' => $this->prerequisites,
             'learning_outcomes' => $this->learning_outcomes,
-            'is_active' => $this->is_active,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'training_centers' => TrainingCenterResource::collection($this->whenLoaded('trainingCenters')),
             'thumbnail' => [
