@@ -19,7 +19,6 @@ class TrainingCenter extends Model implements HasMedia
         'email',
         'area_id',
         'status',
-        'description',
         'website',
     ];
 
@@ -120,7 +119,6 @@ class TrainingCenter extends Model implements HasMedia
      */
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
+        return $query->where('name', 'like', '%' . $search . '%');
     }
 }
