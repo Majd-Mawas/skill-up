@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('home', [HomeController::class, 'index']);
 
     // User Profile Management
-    Route::prefix('users/me')->group(function () {
+    Route::prefix('users')->group(function () {
         Route::get('/', [UserProfileController::class, 'show']);
         Route::put('/', [UserProfileController::class, 'update']);
         Route::post('avatar', [UserProfileController::class, 'uploadAvatar']);

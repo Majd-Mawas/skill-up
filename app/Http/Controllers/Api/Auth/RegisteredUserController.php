@@ -14,8 +14,6 @@ use Illuminate\Validation\ValidationException;
 
 class RegisteredUserController extends Controller
 {
-
-
     /**
      * Handle an incoming registration request.
      *
