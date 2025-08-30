@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     // User Profile Management
     Route::prefix('users')->group(function () {
         Route::get('/', [UserProfileController::class, 'show']);
-        Route::put('/', [UserProfileController::class, 'update']);
+        Route::post('/', [UserProfileController::class, 'update']);
         Route::post('avatar', [UserProfileController::class, 'uploadAvatar']);
         Route::delete('avatar', [UserProfileController::class, 'deleteAvatar']);
         Route::put('password', [UserProfileController::class, 'changePassword']);
