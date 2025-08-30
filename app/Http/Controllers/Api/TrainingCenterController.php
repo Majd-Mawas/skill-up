@@ -163,10 +163,10 @@ class TrainingCenterController extends Controller
 
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $search = $request->search;
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -189,10 +189,10 @@ class TrainingCenterController extends Controller
 
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $search = $request->search;
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -220,19 +220,23 @@ class TrainingCenterController extends Controller
             $query->whereDoesntHave('bookings', function ($query) use ($date, $startTime, $endTime) {
                 $query->where('date', $date)
                     ->where(function ($query) use ($startTime, $endTime) {
+                        // Convert string times to Carbon instances for proper comparison
+                        $startTimeObj = \Carbon\Carbon::parse($startTime);
+                        $endTimeObj = \Carbon\Carbon::parse($endTime);
+                        
                         // Exclude halls where there is a booking that overlaps with the requested time
-                        $query->where(function ($query) use ($startTime, $endTime) {
+                        $query->where(function ($query) use ($startTimeObj, $endTimeObj) {
                             // Booking starts during the requested period
-                            $query->where('start_time', '>=', $startTime)
-                                ->where('start_time', '<', $endTime);
-                        })->orWhere(function ($query) use ($startTime, $endTime) {
+                            $query->whereTime('start_time', '>=', $startTimeObj->format('H:i:s'))
+                                ->whereTime('start_time', '<', $endTimeObj->format('H:i:s'));
+                        })->orWhere(function ($query) use ($startTimeObj, $endTimeObj) {
                             // Booking ends during the requested period
-                            $query->where('end_time', '>', $startTime)
-                                ->where('end_time', '<=', $endTime);
-                        })->orWhere(function ($query) use ($startTime, $endTime) {
+                            $query->whereTime('end_time', '>', $startTimeObj->format('H:i:s'))
+                                ->whereTime('end_time', '<=', $endTimeObj->format('H:i:s'));
+                        })->orWhere(function ($query) use ($startTimeObj, $endTimeObj) {
                             // Booking completely encompasses the requested period
-                            $query->where('start_time', '<=', $startTime)
-                                ->where('end_time', '>=', $endTime);
+                            $query->whereTime('start_time', '<=', $startTimeObj->format('H:i:s'))
+                                ->whereTime('end_time', '>=', $endTimeObj->format('H:i:s'));
                         });
                     });
             });
@@ -244,22 +248,26 @@ class TrainingCenterController extends Controller
                         $invoiceQuery->where('status', '!=', 'cancelled');
                     });
                 })->where(function ($sessionQuery) use ($date, $startTime, $endTime) {
-                    // Convert date and times to datetime for comparison with session start/end times
-                    $requestStartDateTime = date('Y-m-d', strtotime($date)) . ' ' . $startTime;
-                    $requestEndDateTime = date('Y-m-d', strtotime($date)) . ' ' . $endTime;
-
-                    $sessionQuery->where(function ($query) use ($requestStartDateTime, $requestEndDateTime) {
+                    // Create Carbon instances for the requested date and times
+                    $requestDate = \Carbon\Carbon::parse($date)->format('Y-m-d');
+                    $requestStartTime = \Carbon\Carbon::parse($startTime)->format('H:i:s');
+                    $requestEndTime = \Carbon\Carbon::parse($endTime)->format('H:i:s');
+                    
+                    $sessionQuery->where(function ($query) use ($requestDate, $requestStartTime, $requestEndTime) {
                         // Session starts during the requested period
-                        $query->where('start_time', '>=', $requestStartDateTime)
-                            ->where('start_time', '<', $requestEndDateTime);
-                    })->orWhere(function ($query) use ($requestStartDateTime, $requestEndDateTime) {
+                        $query->whereDate('start_time', $requestDate)
+                            ->whereTime('start_time', '>=', $requestStartTime)
+                            ->whereTime('start_time', '<', $requestEndTime);
+                    })->orWhere(function ($query) use ($requestDate, $requestStartTime, $requestEndTime) {
                         // Session ends during the requested period
-                        $query->where('end_time', '>', $requestStartDateTime)
-                            ->where('end_time', '<=', $requestEndDateTime);
-                    })->orWhere(function ($query) use ($requestStartDateTime, $requestEndDateTime) {
+                        $query->whereDate('end_time', $requestDate)
+                            ->whereTime('end_time', '>', $requestStartTime)
+                            ->whereTime('end_time', '<=', $requestEndTime);
+                    })->orWhere(function ($query) use ($requestDate, $requestStartTime, $requestEndTime) {
                         // Session completely encompasses the requested period
-                        $query->where('start_time', '<=', $requestStartDateTime)
-                            ->where('end_time', '>=', $requestEndDateTime);
+                        $query->whereDate('start_time', $requestDate)
+                            ->whereTime('start_time', '<=', $requestStartTime)
+                            ->whereTime('end_time', '>=', $requestEndTime);
                     });
                 });
             });
