@@ -21,6 +21,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Institutes/Training Centers (public)
     Route::get('institutes', [TrainingCenterController::class, 'index']);
     Route::get('institutes/{trainingCenter}', [TrainingCenterController::class, 'show']);
+    Route::get('institutes/{trainingCenter}/courses', [TrainingCenterController::class, 'courses']);
+    Route::get('institutes/{trainingCenter}/halls', [TrainingCenterController::class, 'halls']);
 
     // Courses (public)
     Route::get('courses', [CourseController::class, 'index']);
