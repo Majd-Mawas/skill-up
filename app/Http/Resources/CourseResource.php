@@ -18,34 +18,33 @@ class CourseResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'duration_hours' => $this->duration_hours,
-            'difficulty_level' => $this->difficulty_level,
-            'prerequisites' => $this->prerequisites,
-            'learning_outcomes' => $this->learning_outcomes,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'training_centers' => TrainingCenterResource::collection($this->whenLoaded('trainingCenters')),
-            'thumbnail' => [
-                'original' => $this->thumbnail_url,
-                'thumb' => $this->thumbnail_thumb_url,
-                'medium' => $this->thumbnail_medium_url,
-            ],
-            'gallery' => $this->getMedia('gallery')->map(function ($media) {
-                return [
-                    'id' => $media->id,
-                    'original' => $media->getUrl(),
-                    'thumb' => $media->getUrl('thumb'),
-                    'medium' => $media->getUrl('medium'),
-                ];
+            'price' => $this->whenPivotLoaded('course_training_center', function () {
+                return $this->pivot->price;
             }),
-            'materials' => $this->getMedia('materials')->map(function ($media) {
-                return [
-                    'id' => $media->id,
-                    'name' => $media->name,
-                    'file_name' => $media->file_name,
-                    'mime_type' => $media->mime_type,
-                    'size' => $media->size,
-                    'url' => $media->getUrl(),
-                ];
+
+            'gallery' => $this->whenNotNull($this->getMedia('gallery'), function () {
+                return $this->getMedia('gallery')->map(function ($media) {
+                    return [
+                        'id' => $media->id,
+                        'original' => $media->getUrl(),
+                        'thumb' => $media->getUrl('thumb'),
+                        'medium' => $media->getUrl('medium'),
+                    ];
+                });
+            }),
+            'materials' => $this->whenNotNull($this->getMedia('materials'), function () {
+                return $this->getMedia('materials')->map(function ($media) {
+                    return [
+                        'id' => $media->id,
+                        'name' => $media->name,
+                        'file_name' => $media->file_name,
+                        'mime_type' => $media->mime_type,
+                        'size' => $media->size,
+                        'url' => $media->getUrl(),
+                    ];
+                });
             }),
             'enrollments_count' => $this->whenCounted('enrollments'),
             'reviews_count' => $this->whenCounted('reviews'),
