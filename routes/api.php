@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\Auth\PhoneVerificationController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\InterestController;
 use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\TrainingCenterController;
@@ -53,6 +54,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::apiResource('courses', CourseController::class)->except(['index', 'show']);
         Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
     });
+
+    // Hall booking routes
+    Route::apiResource('hall/bookings', BookingController::class);
 });
 
 // Authentication routes (Guest)
