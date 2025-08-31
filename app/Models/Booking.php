@@ -14,7 +14,9 @@ class Booking extends Model
         'user_id',
         'start_time',
         'end_time',
-        'date',
+        'start_date',
+        'end_date',
+        'legacy_date',
         'purpose',
         'status',
         'notes',
@@ -24,7 +26,9 @@ class Booking extends Model
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
-        'date' => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'legacy_date' => 'date',
         'attendees_count' => 'integer'
     ];
 

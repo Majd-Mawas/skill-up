@@ -28,7 +28,8 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'hall_id' => ['required', 'exists:halls,id'],
-            'date' => ['required', 'date', 'after_or_equal:today'],
+            'start_date' => ['required', 'date', 'after_or_equal:today'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
             'purpose' => ['nullable', 'string', 'max:255'],
@@ -66,14 +67,30 @@ class StoreBookingRequest extends FormRequest
     protected function validateHallAvailability($validator)
     {
         $hallId = $this->input('hall_id');
-        $date = $this->input('date');
+        $startDate = $this->input('start_date');
+        $endDate = $this->input('end_date');
         $startTime = $this->input('start_time');
         $endTime = $this->input('end_time');
 
-        // Check for overlapping bookings
+        // Check for overlapping bookings across the date range
         $overlappingBookings = Booking::where('hall_id', $hallId)
-            ->where('date', $date)
             ->where('status', '!=', 'cancelled')
+            ->where(function ($query) use ($startDate, $endDate) {
+                // Bookings that overlap with our date range
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    // Existing booking starts during our date range
+                    $q->where('start_date', '>=', $startDate)
+                      ->where('start_date', '<=', $endDate);
+                })->orWhere(function ($q) use ($startDate, $endDate) {
+                    // Existing booking ends during our date range
+                    $q->where('end_date', '>=', $startDate)
+                      ->where('end_date', '<=', $endDate);
+                })->orWhere(function ($q) use ($startDate, $endDate) {
+                    // Existing booking spans our entire date range
+                    $q->where('start_date', '<=', $startDate)
+                      ->where('end_date', '>=', $endDate);
+                });
+            })
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->where(function ($q) use ($startTime, $endTime) {
                     // New booking starts during an existing booking

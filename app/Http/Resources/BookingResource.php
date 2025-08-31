@@ -18,7 +18,11 @@ class BookingResource extends JsonResource
             'id' => $this->id,
             'hall' => new HallResource($this->whenLoaded('hall')),
             'user_id' => $this->user_id,
-            'date' => $this->date->format('Y-m-d'),
+            'start_date' => $this->start_date->format('Y-m-d'),
+            'end_date' => $this->end_date->format('Y-m-d'),
+            'legacy_date' => $this->when($this->legacy_date, function() {
+                return $this->legacy_date->format('Y-m-d');
+            }),
             'start_time' => $this->start_time->format('H:i'),
             'end_time' => $this->end_time->format('H:i'),
             'purpose' => $this->purpose,

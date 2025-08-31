@@ -29,12 +29,20 @@ class BookingController extends BaseController
             $query->where('status', $request->status);
         }
 
-        if ($request->has('start_date') && $request->start_date) {
-            $query->whereDate('date', '>=', $request->start_date);
+        if ($request->has('filter_start_date') && $request->filter_start_date) {
+            $query->where(function($q) use ($request) {
+                // Find bookings where start_date or end_date falls within the filter range
+                $q->whereDate('start_date', '>=', $request->filter_start_date)
+                  ->orWhereDate('end_date', '>=', $request->filter_start_date);
+            });
         }
 
-        if ($request->has('end_date') && $request->end_date) {
-            $query->whereDate('date', '<=', $request->end_date);
+        if ($request->has('filter_end_date') && $request->filter_end_date) {
+            $query->where(function($q) use ($request) {
+                // Find bookings where start_date or end_date falls within the filter range
+                $q->whereDate('start_date', '<=', $request->filter_end_date)
+                  ->orWhereDate('end_date', '<=', $request->filter_end_date);
+            });
         }
 
         $bookings = $query->paginate($request->input('per_page', 10));
@@ -143,7 +151,7 @@ class BookingController extends BaseController
         }
 
         // Check if booking is within 24 hours
-        $bookingDateTime = Carbon::parse($booking->date . ' ' . $booking->start_time);
+        $bookingDateTime = Carbon::parse($booking->start_date . ' ' . $booking->start_time);
         $now = Carbon::now();
 
         if ($bookingDateTime->diffInHours($now) < 24) {

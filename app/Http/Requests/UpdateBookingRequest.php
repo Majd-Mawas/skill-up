@@ -29,7 +29,8 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['sometimes', 'required', 'date', 'after_or_equal:today'],
+            'start_date' => ['sometimes', 'required', 'date', 'after_or_equal:today'],
+            'end_date' => ['sometimes', 'required', 'date', 'after_or_equal:start_date'],
             'start_time' => ['sometimes', 'required', 'date_format:H:i'],
             'end_time' => ['sometimes', 'required', 'date_format:H:i', 'after:start_time'],
             'purpose' => ['sometimes', 'required', 'string', 'max:255'],
@@ -70,19 +71,35 @@ class UpdateBookingRequest extends FormRequest
         $hallId = $booking->hall_id;
         
         // Only validate if date or time fields are being updated
-        if (!$this->has('date') && !$this->has('start_time') && !$this->has('end_time')) {
+        if (!$this->has('start_date') && !$this->has('end_date') && !$this->has('start_time') && !$this->has('end_time')) {
             return;
         }
         
-        $date = $this->input('date', $booking->date->format('Y-m-d'));
+        $startDate = $this->input('start_date', $booking->start_date->format('Y-m-d'));
+        $endDate = $this->input('end_date', $booking->end_date->format('Y-m-d'));
         $startTime = $this->input('start_time', $booking->start_time->format('H:i'));
         $endTime = $this->input('end_time', $booking->end_time->format('H:i'));
         
         // Check for overlapping bookings, excluding the current booking
         $overlappingBookings = Booking::where('hall_id', $hallId)
-            ->where('date', $date)
             ->where('status', '!=', 'cancelled')
             ->where('id', '!=', $booking->id) // Exclude current booking
+            ->where(function ($query) use ($startDate, $endDate) {
+                // Bookings that overlap with our date range
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    // Existing booking starts during our date range
+                    $q->where('start_date', '>=', $startDate)
+                      ->where('start_date', '<=', $endDate);
+                })->orWhere(function ($q) use ($startDate, $endDate) {
+                    // Existing booking ends during our date range
+                    $q->where('end_date', '>=', $startDate)
+                      ->where('end_date', '<=', $endDate);
+                })->orWhere(function ($q) use ($startDate, $endDate) {
+                    // Existing booking spans our entire date range
+                    $q->where('start_date', '<=', $startDate)
+                      ->where('end_date', '>=', $endDate);
+                });
+            })
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->where(function ($q) use ($startTime, $endTime) {
                     // New booking starts during an existing booking
@@ -102,7 +119,7 @@ class UpdateBookingRequest extends FormRequest
         
         if ($overlappingBookings) {
             $validator->errors()->add(
-                'date',
+                'start_date',
                 'The hall is already booked for the selected time period.'
             );
         }
