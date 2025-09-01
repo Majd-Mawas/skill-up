@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\TrainingCenterController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\HallController;
 use App\Http\Controllers\Api\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Courses (public)
     Route::get('courses', [CourseController::class, 'index']);
     Route::get('courses/{course}', [CourseController::class, 'show']);
+    
+    // Halls (public)
+    Route::get('halls', [HallController::class, 'index']);
+    Route::get('halls/{hall}', [HallController::class, 'show']);
 
     // Categories (public)
     Route::get('categories', [CategoryController::class, 'index']);
