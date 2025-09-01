@@ -35,7 +35,8 @@ class UpdateBookingRequest extends FormRequest
             'end_time' => ['sometimes', 'required', 'date_format:H:i', 'after:start_time'],
             'purpose' => ['sometimes', 'required', 'string', 'max:255'],
             'attendees_count' => ['sometimes', 'required', 'integer', 'min:1'],
-            'notes' => ['sometimes', 'nullable', 'string']
+            'notes' => ['sometimes', 'nullable', 'string'],
+            'total_price' => ['sometimes', 'nullable', 'numeric', 'min:0']
         ];
     }
 

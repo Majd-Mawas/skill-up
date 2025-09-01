@@ -57,5 +57,9 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
 
 
 
-// Course Levels Routes
-Route::middleware(['auth'])->group(function () {});
+// Hall Bookings Routes
+Route::middleware(['auth'])->group(function () {
+    Route::resource('hall-bookings', App\Http\Controllers\HallBookingController::class);
+    Route::put('hall-bookings/{hallBooking}/cancel', [App\Http\Controllers\HallBookingController::class, 'cancel'])->name('hall-bookings.cancel');
+    Route::put('hall-bookings/{hallBooking}/confirm', [App\Http\Controllers\HallBookingController::class, 'confirm'])->name('hall-bookings.confirm');
+});

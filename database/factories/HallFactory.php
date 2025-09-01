@@ -14,7 +14,7 @@ class HallFactory extends Factory
             'description' => fake()->paragraph(),
             'capacity' => fake()->numberBetween(10, 100),
             'price_per_hour' => fake()->randomFloat(2, 50, 500),
-            'available' => fake()->boolean(),
+            'available' => true,
             'training_center_id' => TrainingCenter::inRandomOrder()->first()->id,
         ];
     }

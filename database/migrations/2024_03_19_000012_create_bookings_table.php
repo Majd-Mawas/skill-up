@@ -13,15 +13,8 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hall_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->date('date');
-            $table->string('purpose')->nullable();
-            $table->string('status')->default('confirmed');
-            $table->text('notes')->nullable();
-            $table->integer('attendees_count')->nullable();
+            $table->decimal('total_price', 10, 2);
             $table->timestamps();
         });
     }

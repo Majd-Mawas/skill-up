@@ -13,6 +13,10 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('restrict');
+            $table->integer('duration_hours')->nullable();
+            $table->string('difficulty_level')->nullable();
+            $table->json('prerequisites')->nullable();
+            $table->json('learning_outcomes')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

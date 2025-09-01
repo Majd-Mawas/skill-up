@@ -34,7 +34,8 @@ class StoreBookingRequest extends FormRequest
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
             'purpose' => ['nullable', 'string', 'max:255'],
             'attendees_count' => ['nullable', 'integer', 'min:1'],
-            'notes' => ['nullable', 'string']
+            'notes' => ['nullable', 'string'],
+            'total_price' => ['nullable', 'numeric', 'min:0']
         ];
     }
 

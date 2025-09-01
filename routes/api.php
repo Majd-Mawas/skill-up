@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\Auth\PhoneVerificationController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\HallBookingController;
 use App\Http\Controllers\Api\InterestController;
 use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\TrainingCenterController;
@@ -29,7 +30,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Courses (public)
     Route::get('courses', [CourseController::class, 'index']);
     Route::get('courses/{course}', [CourseController::class, 'show']);
-    
+
     // Halls (public)
     Route::get('halls', [HallController::class, 'index']);
     Route::get('halls/{hall}', [HallController::class, 'show']);
@@ -61,7 +62,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     });
 
     // Hall booking routes
-    Route::apiResource('hall/bookings', BookingController::class);
+    // Route::apiResource('hall/bookings', BookingController::class);
+    Route::post('hall/bookings', [BookingController::class, 'createHallBooking']);
+    // Route::apiResource('hall-bookings', HallBookingController::class);
 });
 
 // Authentication routes (Guest)

@@ -17,6 +17,7 @@ class PlacementTest extends Model
         'status',
         'notes',
         'evaluator_id',
+        'training_center_id',
         'evaluation_date',
         'recommended_courses',
     ];
@@ -40,5 +41,15 @@ class PlacementTest extends Model
     public function recommendations()
     {
         return $this->hasMany(PlacementTestRecommendation::class);
+    }
+    
+    public function trainingCenter()
+    {
+        return $this->belongsTo(TrainingCenter::class);
+    }
+    
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'placement_test_bookings');
     }
 }

@@ -5,47 +5,52 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class HallBooking extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'hall_id',
         'user_id',
-        'start_time',
-        'end_time',
         'start_date',
         'end_date',
-        'legacy_date',
-        'purpose',
+        'start_time',
+        'end_time',
+        'total_price',
         'status',
-        'notes',
-        'attendees_count',
-        'total_price'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
         'start_date' => 'date',
         'end_date' => 'date',
-        'legacy_date' => 'date',
-        'attendees_count' => 'integer',
-        'total_price' => 'decimal:2'
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'total_price' => 'decimal:2',
     ];
 
+    /**
+     * Get the hall that owns the booking.
+     */
     public function hall()
     {
         return $this->belongsTo(Hall::class);
     }
 
+    /**
+     * Get the user that owns the booking.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-    
-    public function placementTests()
-    {
-        return $this->belongsToMany(PlacementTest::class, 'placement_test_bookings');
     }
 }

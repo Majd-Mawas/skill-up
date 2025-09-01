@@ -171,4 +171,9 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(Session::class, 'trainer_id');
     }
+
+    public function hallBookings()
+    {
+        return $this->hasMany(HallBooking::class);
+    }
 }

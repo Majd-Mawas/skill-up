@@ -38,6 +38,14 @@ class Interest extends Model
     }
 
     /**
+     * Get the categories associated with this interest.
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'categories_interests');
+    }
+
+    /**
      * Scope a query to only include active interests.
      */
     public function scopeActive($query)

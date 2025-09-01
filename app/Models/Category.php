@@ -29,6 +29,14 @@ class Category extends Model implements HasMedia
     }
 
     /**
+     * Get the interests associated with this category.
+     */
+    public function interests()
+    {
+        return $this->belongsToMany(Interest::class, 'categories_interests');
+    }
+
+    /**
      * Define media collections for the category.
      */
     public function registerMediaCollections(): void

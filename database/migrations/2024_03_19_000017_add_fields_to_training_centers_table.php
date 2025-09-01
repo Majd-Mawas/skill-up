@@ -12,13 +12,15 @@ return new class extends Migration
             $table->string('phone_number')->after('address');
             $table->string('email')->after('phone_number');
             $table->string('status')->default('active')->after('email');
+            $table->text('description')->nullable()->after('status');
+            $table->string('website')->nullable()->after('description');
         });
     }
 
     public function down(): void
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            $table->dropColumn(['phone_number', 'email', 'status']);
+            $table->dropColumn(['phone_number', 'email', 'status', 'description', 'website']);
         });
     }
 };

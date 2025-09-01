@@ -61,4 +61,9 @@ class Hall extends Model implements HasMedia
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function hallBookings()
+    {
+        return $this->hasMany(HallBooking::class);
+    }
 }
