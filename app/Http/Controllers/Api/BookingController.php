@@ -30,18 +30,18 @@ class BookingController extends BaseController
         }
 
         if ($request->has('filter_start_date') && $request->filter_start_date) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 // Find bookings where start_date or end_date falls within the filter range
                 $q->whereDate('start_date', '>=', $request->filter_start_date)
-                  ->orWhereDate('end_date', '>=', $request->filter_start_date);
+                    ->orWhereDate('end_date', '>=', $request->filter_start_date);
             });
         }
 
         if ($request->has('filter_end_date') && $request->filter_end_date) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 // Find bookings where start_date or end_date falls within the filter range
                 $q->whereDate('start_date', '<=', $request->filter_end_date)
-                  ->orWhereDate('end_date', '<=', $request->filter_end_date);
+                    ->orWhereDate('end_date', '<=', $request->filter_end_date);
             });
         }
 
@@ -69,10 +69,17 @@ class BookingController extends BaseController
             return $this->sendError('Hall is not available for booking.', [], 422);
         }
 
-        // Create booking
-        $booking = new Booking($request->validated());
+        // Get validated data
+        $validatedData = $request->validated();
+
+        // Format legacy_date from start_date
+        $validatedData['legacy_date'] = Carbon::createFromFormat('d/m/Y', $validatedData['start_date'])->format('Y-m-d');
+
+        // Create booking with all required fields
+        $booking = new Booking($validatedData);
         $booking->user_id = Auth::id();
         $booking->status = 'pending'; // Default status
+        $booking->legacy_date = $validatedData['legacy_date'];
         $booking->save();
 
         return $this->sendResponse(
