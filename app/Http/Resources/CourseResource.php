@@ -19,7 +19,9 @@ class CourseResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'category' => new CategoryResource($this->whenLoaded('category')),
+            'is_online' => $this->is_online,
             'training_centers' => TrainingCenterResource::collection($this->whenLoaded('trainingCenters')),
+            'trainers' => UserResource::collection($this->whenLoaded('trainers')),
             'price' => $this->whenPivotLoaded('course_training_center', function () {
                 return $this->pivot->price;
             }),

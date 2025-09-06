@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Institute\StoreInstituteRequest;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\HallResource;
 use App\Http\Resources\TrainingCenterResource;
+use App\Models\Course;
 use App\Models\TrainingCenter;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -158,6 +159,7 @@ class TrainingCenterController extends Controller
     public function courses(TrainingCenter $trainingCenter, Request $request): JsonResponse
     {
         $query = $trainingCenter->courses()
+            ->where('is_online', false)
             ->with(['category'])
             ->withCount(['enrollments', 'reviews']);
 
@@ -179,7 +181,35 @@ class TrainingCenterController extends Controller
 
         return $this->successResponse(
             CourseResource::collection($courses),
-            'Courses for training center retrieved successfully'
+            'Offline courses for training center retrieved successfully'
+        );
+    }
+
+    public function onlineCourses(Request $request): JsonResponse
+    {
+        $query = Course::where('is_online', true)
+            ->with(['category'])
+            ->withCount(['enrollments', 'reviews']);
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where(function ($q) use ($request) {
+                $search = $request->search;
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $courses = $query->paginate($request->get('per_page', 15));
+
+        return $this->successResponse(
+            CourseResource::collection($courses),
+            'Online courses for training center retrieved successfully'
         );
     }
 

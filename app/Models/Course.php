@@ -37,7 +37,14 @@ class Course extends Model implements HasMedia
     public function trainingCenters()
     {
         return $this->belongsToMany(TrainingCenter::class)
-            ->withPivot('price')
+            ->withPivot(['price', 'start_date'])
+            ->withTimestamps();
+    }
+    
+    public function trainers()
+    {
+        return $this->belongsToMany(User::class, 'course_trainer')
+            ->withPivot(['price', 'start_date', 'end_date', 'notes'])
             ->withTimestamps();
     }
 
@@ -49,6 +56,11 @@ class Course extends Model implements HasMedia
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+    
+    public function onlineCourseBookings()
+    {
+        return $this->hasMany(OnlineCourseBooking::class);
     }
 
     public function payments()
@@ -178,6 +190,6 @@ class Course extends Model implements HasMedia
     public function scopeSearch($query, $search)
     {
         return $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
+            ->orWhere('description', 'like', '%' . $search . '%');
     }
 }

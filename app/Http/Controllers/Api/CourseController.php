@@ -52,6 +52,36 @@ class CourseController extends Controller
             'Courses retrieved successfully'
         );
     }
+    
+    /**
+     * Display a listing of online courses provided by trainers.
+     */
+    public function trainerOnlineCourses(Request $request): JsonResponse
+    {
+        $query = Course::with(['category', 'trainers'])
+            ->withCount(['enrollments', 'reviews'])
+            ->where('is_online', true)
+            ->whereHas('trainers');
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $query->search($request->search);
+        }
+        
+        // Filter by trainer
+        if ($request->has('trainer_id')) {
+            $query->whereHas('trainers', function($q) use ($request) {
+                $q->where('users.id', $request->trainer_id);
+            });
+        }
+
+        $courses = $query->paginate($request->get('per_page', 15));
+
+        return $this->successResponse(
+            CourseResource::collection($courses),
+            'Trainer online courses retrieved successfully'
+        );
+    }
 
     /**
      * Store a newly created course.

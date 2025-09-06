@@ -176,4 +176,16 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(HallBooking::class);
     }
+    
+    public function onlineCourseBookings()
+    {
+        return $this->hasMany(OnlineCourseBooking::class);
+    }
+    
+    public function onlineCourses()
+    {
+        return $this->belongsToMany(Course::class, 'course_trainer')
+            ->withPivot(['price', 'start_date', 'end_date', 'notes'])
+            ->withTimestamps();
+    }
 }

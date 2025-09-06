@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_training_center', function (Blueprint $table) {
+        Schema::create('course_trainer', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->foreignId('training_center_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->decimal('price', 10, 2)->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->integer('duration_hours')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->text('notes')->nullable();
             $table->timestamps();
-
-            $table->unique(['course_id', 'training_center_id']);
+            
+            $table->unique(['course_id', 'user_id']);
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_training_center');
+        Schema::dropIfExists('course_trainer');
     }
 };

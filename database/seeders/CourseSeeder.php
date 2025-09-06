@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Course;
 use App\Models\Category;
 use App\Models\TrainingCenter;
+use App\Models\User;
+use App\Enums\Role;
 use Illuminate\Database\Seeder;
 
 class CourseSeeder extends Seeder
@@ -16,10 +18,10 @@ class CourseSeeder extends Seeder
     {
         // Get all categories
         $categories = Category::all();
-        
+
         // Get all training centers
         $trainingCenters = TrainingCenter::all();
-        
+
         // IT courses
         $itCategory = $categories->where('name', 'تكنولوجيا المعلومات')->first();
         $itCourses = [
@@ -56,7 +58,7 @@ class CourseSeeder extends Seeder
                 'learning_outcomes' => ['تحليل مجموعات البيانات الكبيرة', 'بناء نماذج تعلم الآلة', 'تطبيق خوارزميات الذكاء الاصطناعي']
             ],
         ];
-        
+
         // Business courses
         $businessCategory = $categories->where('name', 'إدارة الأعمال')->first();
         $businessCourses = [
@@ -85,7 +87,7 @@ class CourseSeeder extends Seeder
                 'learning_outcomes' => ['إعداد خطط الأعمال', 'جذب المستثمرين', 'إدارة النمو المستدام للشركات الناشئة']
             ],
         ];
-        
+
         // Language courses
         $languageCategory = $categories->where('name', 'تعلم اللغات')->first();
         $languageCourses = [
@@ -114,7 +116,7 @@ class CourseSeeder extends Seeder
                 'learning_outcomes' => ['التحدث بطلاقة باللغة الفرنسية', 'فهم النصوص الأدبية والصحفية', 'كتابة مقالات متقدمة']
             ],
         ];
-        
+
         // Professional development courses
         $professionalCategory = $categories->where('name', 'التطوير المهني')->first();
         $professionalCourses = [
@@ -135,7 +137,7 @@ class CourseSeeder extends Seeder
                 'learning_outcomes' => ['قيادة الفرق بفعالية', 'حل النزاعات في مكان العمل', 'تحفيز الموظفين وتطوير أدائهم']
             ],
         ];
-        
+
         // Technical skills courses
         $technicalCategory = $categories->where('name', 'المهارات التقنية')->first();
         $technicalCourses = [
@@ -164,7 +166,7 @@ class CourseSeeder extends Seeder
                 'learning_outcomes' => ['بناء نماذج الذكاء الاصطناعي', 'تطبيق تقنيات معالجة اللغة الطبيعية', 'تطوير حلول ذكية للمشكلات العملية']
             ],
         ];
-        
+
         // Combine all courses
         $allCourses = [
             $itCategory->id => $itCourses,
@@ -173,7 +175,7 @@ class CourseSeeder extends Seeder
             $professionalCategory->id => $professionalCourses,
             $technicalCategory->id => $technicalCourses,
         ];
-        
+
         // Create courses for each category
         foreach ($allCourses as $categoryId => $courses) {
             foreach ($courses as $courseData) {
@@ -185,14 +187,43 @@ class CourseSeeder extends Seeder
                     'difficulty_level' => $courseData['difficulty_level'],
                     'prerequisites' => $courseData['prerequisites'],
                     'learning_outcomes' => $courseData['learning_outcomes'],
+                    'is_online' => fake()->boolean(),
                 ]);
-                
+
                 // Attach to 2-4 random training centers
                 $randomTrainingCenters = $trainingCenters->random(rand(2, 4));
                 foreach ($randomTrainingCenters as $trainingCenter) {
+                    // Generate random dates within next 6 months
+                    $startDate = fake()->dateTimeBetween('now', '+2 months')->format('Y-m-d');
+                    $endDate = fake()->dateTimeBetween($startDate, '+2 months')->format('Y-m-d');
+
                     $course->trainingCenters()->attach($trainingCenter->id, [
-                        'price' => fake()->numberBetween(500, 3000)
+                        'price' => fake()->numberBetween(500, 3000),
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'duration_hours' => fake()->numberBetween(20, 60)
                     ]);
+                }
+                
+                // If course is online, assign 1-3 trainers to it
+                if ($course->is_online) {
+                    // Get trainers with Trainer role
+                    $trainers = User::whereHas('roles', function($query) {
+                        $query->where('name', Role::TRAINER->value);
+                    })->inRandomOrder()->take(rand(1, 3))->get();
+                    
+                    foreach ($trainers as $trainer) {
+                        // Generate random dates within next 6 months
+                        $startDate = fake()->dateTimeBetween('now', '+2 months')->format('Y-m-d');
+                        $endDate = fake()->dateTimeBetween($startDate, '+4 months')->format('Y-m-d');
+                        
+                        $course->trainers()->attach($trainer->id, [
+                            'price' => fake()->numberBetween(300, 2000),
+                            'start_date' => $startDate,
+                            'end_date' => $endDate,
+                            'notes' => fake()->optional(0.7)->sentence(),
+                        ]);
+                    }
                 }
             }
         }
