@@ -232,15 +232,79 @@ class TrainingCenterController extends Controller
         }
 
         // Filter by capacity
-        if ($request->has('min_capacity')) {
+        if ($request->filled('min_capacity')) {
             $query->where('capacity', '>=', $request->min_capacity);
         }
 
-        if ($request->has('max_capacity')) {
+        if ($request->filled('max_capacity')) {
             $query->where('capacity', '<=', $request->max_capacity);
         }
 
-        // Filter by date and time availability (check existing bookings)
+        // Filter by number of students
+        if ($request->filled('students_count')) {
+            $query->where('capacity', '>=', $request->students_count);
+        }
+
+        // Filter by date range availability (start_date and end_date)
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+
+            // Exclude halls with bookings that overlap with the requested date range
+            $query->whereDoesntHave('hallBookings', function ($query) use ($startDate, $endDate) {
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    // Booking starts during the requested period
+                    $q->where('start_date', '>=', $startDate)
+                      ->where('start_date', '<=', $endDate);
+                })->orWhere(function ($q) use ($startDate, $endDate) {
+                    // Booking ends during the requested period
+                    $q->where('end_date', '>=', $startDate)
+                      ->where('end_date', '<=', $endDate);
+                })->orWhere(function ($q) use ($startDate, $endDate) {
+                    // Booking completely encompasses the requested period
+                    $q->where('start_date', '<=', $startDate)
+                      ->where('end_date', '>=', $endDate);
+                });
+            });
+        }
+
+        // Filter by time range availability (from_time and to_time)
+        if ($request->filled('from_time') && $request->filled('to_time')) {
+            $fromTime = $request->from_time;
+            $toTime = $request->to_time;
+
+            // Exclude halls with bookings that overlap with the requested time range
+            $query->whereDoesntHave('hallBookings', function ($query) use ($fromTime, $toTime) {
+                // Convert string times to Carbon instances for proper comparison
+                $fromTimeObj = \Carbon\Carbon::parse($fromTime);
+                $toTimeObj = \Carbon\Carbon::parse($toTime);
+                $fromTimeFormatted = $fromTimeObj->format('H:i:s');
+                $toTimeFormatted = $toTimeObj->format('H:i:s');
+
+                // Exclude halls where there is a booking that overlaps with the requested time
+                $query->where(function ($query) use ($fromTimeFormatted, $toTimeFormatted) {
+                    // Booking starts during the requested period
+                    $query->where('start_time', '>=', $fromTimeFormatted)
+                          ->where('start_time', '<', $toTimeFormatted);
+                })->orWhere(function ($query) use ($fromTimeFormatted, $toTimeFormatted) {
+                    // Booking ends during the requested period
+                    $query->where('end_time', '>', $fromTimeFormatted)
+                          ->where('end_time', '<=', $toTimeFormatted);
+                })->orWhere(function ($query) use ($fromTimeFormatted, $toTimeFormatted) {
+                    // Booking completely encompasses the requested period
+                    $query->where('start_time', '<=', $fromTimeFormatted)
+                          ->where('end_time', '>=', $toTimeFormatted);
+                });
+            });
+        }
+
+        // Filter by hours count (duration)
+        if ($request->has('hours_count') && $request->hours_count > 0) {
+            // This will be used in the frontend to calculate the booking duration
+            // No direct filtering in the database as it depends on start_time and end_time
+        }
+
+        // Legacy filter by date and time availability (for backward compatibility)
         if ($request->filled('date') && $request->filled('start_time') && $request->filled('end_time')) {
             $date = $request->date;
             $startTime = $request->start_time;
@@ -256,24 +320,33 @@ class TrainingCenterController extends Controller
                     // Convert string times to Carbon instances for proper comparison
                     $startTimeObj = \Carbon\Carbon::parse($startTime);
                     $endTimeObj = \Carbon\Carbon::parse($endTime);
+                    $startTimeFormatted = $startTimeObj->format('H:i:s');
+                    $endTimeFormatted = $endTimeObj->format('H:i:s');
 
                     // Exclude halls where there is a booking that overlaps with the requested time
-                    $query->where(function ($query) use ($startTimeObj, $endTimeObj) {
+                    $query->where(function ($query) use ($startTimeFormatted, $endTimeFormatted) {
                         // Booking starts during the requested period
-                        $query->whereTime('start_time', '>=', $startTimeObj->format('H:i:s'))
-                            ->whereTime('start_time', '<', $endTimeObj->format('H:i:s'));
-                    })->orWhere(function ($query) use ($startTimeObj, $endTimeObj) {
+                        $query->where('start_time', '>=', $startTimeFormatted)
+                              ->where('start_time', '<', $endTimeFormatted);
+                    })->orWhere(function ($query) use ($startTimeFormatted, $endTimeFormatted) {
                         // Booking ends during the requested period
-                        $query->whereTime('end_time', '>', $startTimeObj->format('H:i:s'))
-                            ->whereTime('end_time', '<=', $endTimeObj->format('H:i:s'));
-                    })->orWhere(function ($query) use ($startTimeObj, $endTimeObj) {
+                        $query->where('end_time', '>', $startTimeFormatted)
+                              ->where('end_time', '<=', $endTimeFormatted);
+                    })->orWhere(function ($query) use ($startTimeFormatted, $endTimeFormatted) {
                         // Booking completely encompasses the requested period
-                        $query->whereTime('start_time', '<=', $startTimeObj->format('H:i:s'))
-                            ->whereTime('end_time', '>=', $endTimeObj->format('H:i:s'));
+                        $query->where('start_time', '<=', $startTimeFormatted)
+                              ->where('end_time', '>=', $endTimeFormatted);
                     });
                 });
             });
         }
+
+        // // Filter by photo availability
+        // if ($request->has('has_photo') && $request->boolean('has_photo')) {
+        //     $query->whereHas('media', function ($q) {
+        //         $q->where('collection_name', 'halls');
+        //     });
+        // }
 
         $halls = $query->paginate($request->get('per_page', 15));
 

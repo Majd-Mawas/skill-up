@@ -5,14 +5,16 @@ use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\Auth\PhoneVerificationController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\BookingController;
-use App\Http\Controllers\Api\HallBookingController;
 use App\Http\Controllers\Api\InterestController;
 use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\TrainingCenterController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\API\CourseBookingController;
+use App\Http\Controllers\Api\CourseTrainerController;
 use App\Http\Controllers\Api\HallController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\OnlineCourseBookingController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -65,11 +67,11 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Online course trainer routes (for admin and trainers)
     Route::middleware('role:admin,trainer')->group(function () {
-        Route::get('courses/{course}/trainers', [\App\Http\Controllers\Api\CourseTrainerController::class, 'index']);
-        Route::post('courses/{course}/trainers', [\App\Http\Controllers\Api\CourseTrainerController::class, 'store']);
-        Route::get('courses/{course}/trainers/{user}', [\App\Http\Controllers\Api\CourseTrainerController::class, 'show']);
-        Route::put('courses/{course}/trainers/{user}', [\App\Http\Controllers\Api\CourseTrainerController::class, 'update']);
-        Route::delete('courses/{course}/trainers/{user}', [\App\Http\Controllers\Api\CourseTrainerController::class, 'destroy']);
+        Route::get('courses/{course}/trainers', [CourseTrainerController::class, 'index']);
+        Route::post('courses/{course}/trainers', [CourseTrainerController::class, 'store']);
+        Route::get('courses/{course}/trainers/{user}', [CourseTrainerController::class, 'show']);
+        Route::put('courses/{course}/trainers/{user}', [CourseTrainerController::class, 'update']);
+        Route::delete('courses/{course}/trainers/{user}', [CourseTrainerController::class, 'destroy']);
     });
 
     // Hall booking routes
@@ -79,22 +81,22 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Course booking routes
     Route::prefix('course/bookings')->group(function () {
-        Route::get('/available-courses', [\App\Http\Controllers\API\CourseBookingController::class, 'getAvailableCourses']);
-        Route::get('/', [\App\Http\Controllers\API\CourseBookingController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\API\CourseBookingController::class, 'store']);
-        Route::get('/{id}', [\App\Http\Controllers\API\CourseBookingController::class, 'show']);
-        Route::put('/{id}', [\App\Http\Controllers\API\CourseBookingController::class, 'update']);
-        Route::delete('/{id}', [\App\Http\Controllers\API\CourseBookingController::class, 'destroy']);
+        Route::get('/available-courses', [CourseBookingController::class, 'getAvailableCourses']);
+        Route::get('/', [CourseBookingController::class, 'index']);
+        Route::post('/', [CourseBookingController::class, 'store']);
+        Route::get('/{id}', [CourseBookingController::class, 'show']);
+        Route::put('/{id}', [CourseBookingController::class, 'update']);
+        Route::delete('/{id}', [CourseBookingController::class, 'destroy']);
     });
 
     // Online Course booking routes
     Route::prefix('course/online/bookings')->group(function () {
-        Route::get('/available-courses', [\App\Http\Controllers\Api\OnlineCourseBookingController::class, 'getAvailableOnlineCourses']);
-        Route::get('/', [\App\Http\Controllers\Api\OnlineCourseBookingController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\Api\OnlineCourseBookingController::class, 'store']);
-        Route::get('/{id}', [\App\Http\Controllers\Api\OnlineCourseBookingController::class, 'show']);
-        Route::put('/{id}', [\App\Http\Controllers\Api\OnlineCourseBookingController::class, 'update']);
-        Route::delete('/{id}', [\App\Http\Controllers\Api\OnlineCourseBookingController::class, 'destroy']);
+        Route::get('/available-courses', [OnlineCourseBookingController::class, 'getAvailableOnlineCourses']);
+        Route::get('/', [OnlineCourseBookingController::class, 'index']);
+        Route::post('/', [OnlineCourseBookingController::class, 'store']);
+        Route::get('/{id}', [OnlineCourseBookingController::class, 'show']);
+        Route::put('/{id}', [OnlineCourseBookingController::class, 'update']);
+        Route::delete('/{id}', [OnlineCourseBookingController::class, 'destroy']);
     });
 });
 
