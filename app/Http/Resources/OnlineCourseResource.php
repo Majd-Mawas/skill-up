@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CourseResource extends JsonResource
+class OnlineCourseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,13 +19,11 @@ class CourseResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'is_online' => $this->is_online,
-            'price' => $this->whenPivotLoaded('course_training_center', function () {
-                return $this->pivot->price;
-            }),
+            'price' => $this->online_price,
+            'start_date' => $this->online_start_date,
+            'end_date' => $this->online_end_date,
             'category' => new CategoryResource($this->whenLoaded('category')),
-            'training_centers' => TrainingCenterResource::collection($this->whenLoaded('trainingCenters')),
             'trainers' => UserResource::collection($this->whenLoaded('trainers')),
-
             'gallery' => $this->whenNotNull($this->getMedia('gallery'), function () {
                 return $this->getMedia('gallery')->map(function ($media) {
                     return [
@@ -48,7 +46,7 @@ class CourseResource extends JsonResource
                     ];
                 });
             }),
-            'enrollments_count' => $this->whenCounted('enrollments'),
+            'online_course_bookings_count' => $this->whenCounted('onlineCourseBookings'),
             'reviews_count' => $this->whenCounted('reviews'),
             'average_rating' => $this->whenLoaded('reviews', function () {
                 return $this->reviews->avg('rating');

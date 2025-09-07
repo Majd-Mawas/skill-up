@@ -40,12 +40,36 @@ class Course extends Model implements HasMedia
             ->withPivot(['price', 'start_date'])
             ->withTimestamps();
     }
-    
+
     public function trainers()
     {
         return $this->belongsToMany(User::class, 'course_trainer')
             ->withPivot(['price', 'start_date', 'end_date', 'notes'])
             ->withTimestamps();
+    }
+
+    public function getOnlinePriceAttribute()
+    {
+        if ($this->relationLoaded('trainers') && $this->trainers->count() > 0) {
+            return $this->trainers->first()->pivot->price ?? 0;
+        }
+        return 0;
+    }
+
+    public function getOnlineStartDateAttribute()
+    {
+        if ($this->relationLoaded('trainers') && $this->trainers->count() > 0) {
+            return $this->trainers->first()->pivot->start_date ?? null;
+        }
+        return null;
+    }
+
+    public function getOnlineEndDateAttribute()
+    {
+        if ($this->relationLoaded('trainers') && $this->trainers->count() > 0) {
+            return $this->trainers->first()->pivot->end_date ?? null;
+        }
+        return null;
     }
 
     public function sessions()
@@ -57,7 +81,7 @@ class Course extends Model implements HasMedia
     {
         return $this->hasMany(Enrollment::class);
     }
-    
+
     public function onlineCourseBookings()
     {
         return $this->hasMany(OnlineCourseBooking::class);

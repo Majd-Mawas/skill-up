@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Course\StoreCourseRequest;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\OnlineCourseResource;
 use App\Models\Course;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -56,37 +57,51 @@ class CourseController extends Controller
     /**
      * Display a listing of popular online courses ordered by number of bookings.
      */
-    private function popularOnlineCourses()
+    private function popularOnlineCoursesMethod()
     {
-        $query = Course::with(['category', 'trainers'])
+        $query = Course::with(['category'])
             ->withCount(['onlineCourseBookings', 'reviews'])
+            ->with(['trainers' => function ($query) {
+                $query->withPivot('price', 'start_date', 'end_date'); // Load the price from pivot table
+            }])
             ->where('is_online', true)
             ->whereHas('trainers')
             ->orderByDesc('online_course_bookings_count');
 
-        // Search functionality
-        // if ($request->has('search') && !empty($request->search)) {
-        //     $query->search($request->search);
-        // }
-
-        // $limit = $request->get('limit', 10);
-        $courses = $query->paginate(10);
-
-        return CourseResource::collection($courses);
-        // return $this->successResponse(
-        //     'Popular online courses retrieved successfully'
-        // );
+        return $query;
     }
 
     /**
-     * Display a listing of online courses provided by trainers.
+     * Display a listing of popular online courses ordered by number of bookings.
      */
-    public function trainerOnlineCourses(Request $request): JsonResponse
+    public function popularOnlineCourses(Request $request): JsonResponse
     {
-        $query = Course::with(['category', 'trainers'])
+        $query = $this->popularOnlineCoursesMethod();
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $query->search($request->search);
+        }
+
+        // Limit results
+        $limit = $request->get('limit', 10);
+        $courses = $query->paginate($limit);
+
+        return $this->successResponse(
+            OnlineCourseResource::collection($courses),
+            'Popular online courses retrieved successfully'
+        );
+    }
+
+
+    public function trainerOnlineCourses(Request $request)
+    {
+        $query = Course::with(['category'])
             ->withCount(['enrollments', 'reviews'])
-            ->where('is_online', true)
-            ->whereHas('trainers');
+            ->with(['trainers' => function ($query) {
+                $query->withPivot('price', 'start_date', 'end_date'); // Load the price and dates from pivot table
+            }])
+            ->where('is_online', true);
 
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
@@ -102,12 +117,33 @@ class CourseController extends Controller
 
         $courses = $query->paginate($request->get('per_page', 15));
 
+        // Transform courses to include all trainers instead of just first one
+        $transformedCourses = OnlineCourseResource::collection($courses);
+        
+        // Get popular courses
+        $popularQuery = $this->popularOnlineCoursesMethod();
+        $popularCourses = $popularQuery->take(5)->get();
+
         return $this->successResponse(
             [
-                'courses' => CourseResource::collection($courses),
-                'popular' => $this->popularOnlineCourses()
+                'courses' => $transformedCourses,
+                'popular' => OnlineCourseResource::collection($popularCourses)
             ],
             'Trainer online courses retrieved successfully'
+        );
+    }
+
+    public function trainerOnlineCoursesShow(Course $course): JsonResponse
+    {
+        $course->load(['category'])
+            ->loadCount(['onlineCourseBookings', 'reviews'])
+            ->load(['trainers' => function ($query) {
+                $query->withPivot('price', 'start_date', 'end_date');
+            }]);
+
+        return $this->successResponse(
+            new OnlineCourseResource($course),
+            'Course details retrieved successfully'
         );
     }
 
@@ -151,11 +187,11 @@ class CourseController extends Controller
     /**
      * Display the specified course.
      */
-    public function show(Course $course): JsonResponse
+    public function show(Course $course)
     {
         $course->load(['category', 'trainingCenters', 'levels', 'reviews'])
             ->loadCount(['enrollments', 'reviews']);
-
+        return $course;
         return $this->successResponse(
             new CourseResource($course),
             'Course retrieved successfully'

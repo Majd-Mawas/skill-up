@@ -28,12 +28,14 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Route::get('institutes/online-courses', [TrainingCenterController::class, 'onlineCourses']);
     Route::get('institutes/{trainingCenter}', [TrainingCenterController::class, 'show']);
     Route::get('institutes/{trainingCenter}/courses', [TrainingCenterController::class, 'courses']);
+    Route::get('institutes/{trainingCenter}/courses/{course}', [TrainingCenterController::class, 'coursesShow']);
     Route::get('institutes/{trainingCenter}/halls', [TrainingCenterController::class, 'halls']);
 
     // Courses (public)
     Route::get('courses', [CourseController::class, 'index']);
     Route::get('courses/online', [CourseController::class, 'trainerOnlineCourses']);
     Route::get('courses/online/popular', [CourseController::class, 'popularOnlineCourses']);
+    Route::get('courses/online/{course}', [CourseController::class, 'trainerOnlineCoursesShow']);
     Route::get('courses/{course}', [CourseController::class, 'show']);
 
     // Halls (public)

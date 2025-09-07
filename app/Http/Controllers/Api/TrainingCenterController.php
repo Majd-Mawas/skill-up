@@ -184,6 +184,23 @@ class TrainingCenterController extends Controller
             'Offline courses for training center retrieved successfully'
         );
     }
+    public function coursesShow(TrainingCenter $trainingCenter, Course $course)
+    {
+        $course = $trainingCenter->courses()
+            ->with(['category'])
+            ->withCount(['enrollments', 'reviews'])
+            ->wherePivot('course_id', $course->id)
+            ->first();
+
+        if (!$course) {
+            return $this->errorResponse('Course not found in this training center', 404);
+        }
+
+        return $this->successResponse(
+            new CourseResource($course),
+            'Course retrieved successfully'
+        );
+    }
 
     public function onlineCourses(Request $request): JsonResponse
     {
@@ -255,15 +272,15 @@ class TrainingCenterController extends Controller
                 $query->where(function ($q) use ($startDate, $endDate) {
                     // Booking starts during the requested period
                     $q->where('start_date', '>=', $startDate)
-                      ->where('start_date', '<=', $endDate);
+                        ->where('start_date', '<=', $endDate);
                 })->orWhere(function ($q) use ($startDate, $endDate) {
                     // Booking ends during the requested period
                     $q->where('end_date', '>=', $startDate)
-                      ->where('end_date', '<=', $endDate);
+                        ->where('end_date', '<=', $endDate);
                 })->orWhere(function ($q) use ($startDate, $endDate) {
                     // Booking completely encompasses the requested period
                     $q->where('start_date', '<=', $startDate)
-                      ->where('end_date', '>=', $endDate);
+                        ->where('end_date', '>=', $endDate);
                 });
             });
         }
@@ -285,15 +302,15 @@ class TrainingCenterController extends Controller
                 $query->where(function ($query) use ($fromTimeFormatted, $toTimeFormatted) {
                     // Booking starts during the requested period
                     $query->where('start_time', '>=', $fromTimeFormatted)
-                          ->where('start_time', '<', $toTimeFormatted);
+                        ->where('start_time', '<', $toTimeFormatted);
                 })->orWhere(function ($query) use ($fromTimeFormatted, $toTimeFormatted) {
                     // Booking ends during the requested period
                     $query->where('end_time', '>', $fromTimeFormatted)
-                          ->where('end_time', '<=', $toTimeFormatted);
+                        ->where('end_time', '<=', $toTimeFormatted);
                 })->orWhere(function ($query) use ($fromTimeFormatted, $toTimeFormatted) {
                     // Booking completely encompasses the requested period
                     $query->where('start_time', '<=', $fromTimeFormatted)
-                          ->where('end_time', '>=', $toTimeFormatted);
+                        ->where('end_time', '>=', $toTimeFormatted);
                 });
             });
         }
@@ -327,15 +344,15 @@ class TrainingCenterController extends Controller
                     $query->where(function ($query) use ($startTimeFormatted, $endTimeFormatted) {
                         // Booking starts during the requested period
                         $query->where('start_time', '>=', $startTimeFormatted)
-                              ->where('start_time', '<', $endTimeFormatted);
+                            ->where('start_time', '<', $endTimeFormatted);
                     })->orWhere(function ($query) use ($startTimeFormatted, $endTimeFormatted) {
                         // Booking ends during the requested period
                         $query->where('end_time', '>', $startTimeFormatted)
-                              ->where('end_time', '<=', $endTimeFormatted);
+                            ->where('end_time', '<=', $endTimeFormatted);
                     })->orWhere(function ($query) use ($startTimeFormatted, $endTimeFormatted) {
                         // Booking completely encompasses the requested period
                         $query->where('start_time', '<=', $startTimeFormatted)
-                              ->where('end_time', '>=', $endTimeFormatted);
+                            ->where('end_time', '>=', $endTimeFormatted);
                     });
                 });
             });
