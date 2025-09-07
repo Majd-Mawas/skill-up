@@ -33,6 +33,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Courses (public)
     Route::get('courses', [CourseController::class, 'index']);
     Route::get('courses/online', [CourseController::class, 'trainerOnlineCourses']);
+    Route::get('courses/online/popular', [CourseController::class, 'popularOnlineCourses']);
     Route::get('courses/{course}', [CourseController::class, 'show']);
 
     // Halls (public)
@@ -81,22 +82,22 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Course booking routes
     Route::prefix('course/bookings')->group(function () {
-        Route::get('/available-courses', [CourseBookingController::class, 'getAvailableCourses']);
-        Route::get('/', [CourseBookingController::class, 'index']);
+        // Route::get('/available-courses', [CourseBookingController::class, 'getAvailableCourses']);
+        // Route::get('/', [CourseBookingController::class, 'index']);
         Route::post('/', [CourseBookingController::class, 'store']);
-        Route::get('/{id}', [CourseBookingController::class, 'show']);
-        Route::put('/{id}', [CourseBookingController::class, 'update']);
-        Route::delete('/{id}', [CourseBookingController::class, 'destroy']);
+        // Route::get('/{id}', [CourseBookingController::class, 'show']);
+        // Route::put('/{id}', [CourseBookingController::class, 'update']);
+        // Route::delete('/{id}', [CourseBookingController::class, 'destroy']);
     });
 
     // Online Course booking routes
     Route::prefix('course/online/bookings')->group(function () {
-        Route::get('/available-courses', [OnlineCourseBookingController::class, 'getAvailableOnlineCourses']);
-        Route::get('/', [OnlineCourseBookingController::class, 'index']);
+        // Route::get('/available-courses', [OnlineCourseBookingController::class, 'getAvailableOnlineCourses']);
+        // Route::get('/', [OnlineCourseBookingController::class, 'index']);
         Route::post('/', [OnlineCourseBookingController::class, 'store']);
-        Route::get('/{id}', [OnlineCourseBookingController::class, 'show']);
-        Route::put('/{id}', [OnlineCourseBookingController::class, 'update']);
-        Route::delete('/{id}', [OnlineCourseBookingController::class, 'destroy']);
+        // Route::get('/{id}', [OnlineCourseBookingController::class, 'show']);
+        // Route::put('/{id}', [OnlineCourseBookingController::class, 'update']);
+        // Route::delete('/{id}', [OnlineCourseBookingController::class, 'destroy']);
     });
 });
 

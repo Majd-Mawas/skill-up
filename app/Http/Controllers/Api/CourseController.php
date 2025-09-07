@@ -52,7 +52,32 @@ class CourseController extends Controller
             'Courses retrieved successfully'
         );
     }
-    
+
+    /**
+     * Display a listing of popular online courses ordered by number of bookings.
+     */
+    private function popularOnlineCourses()
+    {
+        $query = Course::with(['category', 'trainers'])
+            ->withCount(['onlineCourseBookings', 'reviews'])
+            ->where('is_online', true)
+            ->whereHas('trainers')
+            ->orderByDesc('online_course_bookings_count');
+
+        // Search functionality
+        // if ($request->has('search') && !empty($request->search)) {
+        //     $query->search($request->search);
+        // }
+
+        // $limit = $request->get('limit', 10);
+        $courses = $query->paginate(10);
+
+        return CourseResource::collection($courses);
+        // return $this->successResponse(
+        //     'Popular online courses retrieved successfully'
+        // );
+    }
+
     /**
      * Display a listing of online courses provided by trainers.
      */
@@ -67,10 +92,10 @@ class CourseController extends Controller
         if ($request->has('search') && !empty($request->search)) {
             $query->search($request->search);
         }
-        
+
         // Filter by trainer
         if ($request->has('trainer_id')) {
-            $query->whereHas('trainers', function($q) use ($request) {
+            $query->whereHas('trainers', function ($q) use ($request) {
                 $q->where('users.id', $request->trainer_id);
             });
         }
@@ -78,7 +103,10 @@ class CourseController extends Controller
         $courses = $query->paginate($request->get('per_page', 15));
 
         return $this->successResponse(
-            CourseResource::collection($courses),
+            [
+                'courses' => CourseResource::collection($courses),
+                'popular' => $this->popularOnlineCourses()
+            ],
             'Trainer online courses retrieved successfully'
         );
     }

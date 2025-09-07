@@ -71,7 +71,7 @@ class HallBookingController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 422);
+            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
         }
 
         // Validate hall exists and is available
@@ -85,7 +85,7 @@ class HallBookingController extends BaseController
         $this->validateHallAvailability($request, $validator);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 422);
+            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
         }
 
         // Calculate total price
@@ -165,26 +165,26 @@ class HallBookingController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 422);
+            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
         }
 
         // If dates or times are being updated, check for overlapping bookings
-        if ($request->has('start_date') || $request->has('end_date') || 
+        if ($request->has('start_date') || $request->has('end_date') ||
             $request->has('start_time') || $request->has('end_time')) {
             $this->validateHallAvailability($request, $validator, $hallBooking->id);
 
             if ($validator->fails()) {
-                return $this->sendError('Validation Error.', $validator->errors(), 422);
+                return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
             }
 
             // Recalculate total price if dates or times changed
             $hall = Hall::findOrFail($hallBooking->hall_id);
             $startDateTime = Carbon::parse(
-                ($request->start_date ?? $hallBooking->start_date) . ' ' . 
+                ($request->start_date ?? $hallBooking->start_date) . ' ' .
                 ($request->start_time ?? $hallBooking->start_time->format('H:i'))
             );
             $endDateTime = Carbon::parse(
-                ($request->end_date ?? $hallBooking->end_date) . ' ' . 
+                ($request->end_date ?? $hallBooking->end_date) . ' ' .
                 ($request->end_time ?? $hallBooking->end_time->format('H:i'))
             );
             $durationInHours = $endDateTime->diffInMinutes($startDateTime) / 60;
