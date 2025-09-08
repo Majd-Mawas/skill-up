@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -91,6 +92,14 @@ class User extends Authenticatable implements HasMedia
             ->height(300)
             ->sharpen(10)
             ->performOnCollections('avatar');
+    }
+    
+    /**
+     * Get the ICDL card bookings for the user.
+     */
+    public function icdlCardBookings(): HasMany
+    {
+        return $this->hasMany(ICDLCardBooking::class);
     }
 
     /**

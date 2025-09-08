@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\CourseTrainerController;
 use App\Http\Controllers\Api\HallController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\OnlineCourseBookingController;
+use App\Http\Controllers\Api\ICDLCardBookingController;
+use App\Http\Controllers\Api\ICDLTestBookingController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -23,13 +25,14 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::get('interests', [InterestController::class, 'index']);
     Route::get('interests/{interest}', [InterestController::class, 'show']);
 
-    // Institutes/Training Centers (public)
     Route::get('institutes', [TrainingCenterController::class, 'index']);
-    // Route::get('institutes/online-courses', [TrainingCenterController::class, 'onlineCourses']);
+
     Route::get('institutes/{trainingCenter}', [TrainingCenterController::class, 'show']);
     Route::get('institutes/{trainingCenter}/courses', [TrainingCenterController::class, 'courses']);
     Route::get('institutes/{trainingCenter}/courses/{course}', [TrainingCenterController::class, 'coursesShow']);
     Route::get('institutes/{trainingCenter}/halls', [TrainingCenterController::class, 'halls']);
+    // Route::get('institutes/{trainingCenter}/icdl-cards/available-times', [ICDLCardBookingController::class, 'getAvailableTimes']);
+    Route::get('institutes/{trainingCenter}/icdl-tests/available-times', [ICDLTestBookingController::class, 'getAvailableTimes']);
 
     // Courses (public)
     Route::get('courses', [CourseController::class, 'index']);
@@ -100,6 +103,27 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         // Route::get('/{id}', [OnlineCourseBookingController::class, 'show']);
         // Route::put('/{id}', [OnlineCourseBookingController::class, 'update']);
         // Route::delete('/{id}', [OnlineCourseBookingController::class, 'destroy']);
+    });
+
+    Route::prefix('icdl-card/bookings')->group(function () {
+        Route::get('/', [ICDLCardBookingController::class, 'index']);
+        Route::post('/', [ICDLCardBookingController::class, 'store']);
+    });
+
+    Route::prefix('icdl-test/bookings')->group(function () {
+        Route::get('/', [ICDLTestBookingController::class, 'index']);
+        Route::post('/', [ICDLTestBookingController::class, 'store']);
+    });
+});  // End of protected routes
+
+// Public routes
+Route::prefix('v1')->group(function () {
+    Route::prefix('icdl-card-bookings')->group(function () {
+        Route::get('/available-times', [ICDLCardBookingController::class, 'getAvailableTimes']);
+    });
+
+    Route::prefix('icdl-test-bookings')->group(function () {
+        Route::get('/available-times', [ICDLTestBookingController::class, 'getAvailableTimes']);
     });
 });
 

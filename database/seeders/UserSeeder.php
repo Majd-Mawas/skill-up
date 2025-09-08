@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'phone_number' => '+963960965509',
             'password' => Hash::make('password'),
-            'area_id' => 1,
+            'area_id' => 3,
             'email_verified_at' => now(),
             'phone_verified' => true,
         ]);
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'email' => "trainer{$i}@example.com",
                 'phone_number' => '+9639' . fake()->unique()->numberBetween(31000000, 99999999),
                 'password' => Hash::make('password'),
-                'area_id' => rand(1, 5),
+                'area_id' => rand(3, 7),
                 'email_verified_at' => now(),
                 'phone_verified' => true,
             ]);
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 'email' => "student{$i}@example.com",
                 'phone_number' => "+9639" . fake()->unique()->numberBetween(31000000, 99999999),
                 'password' => Hash::make('password'),
-                'area_id' => rand(1, 5),
+                'area_id' => rand(3, 7),
                 'email_verified_at' => now(),
                 'phone_verified' => true,
             ]);
@@ -58,7 +58,7 @@ class UserSeeder extends Seeder
                 'email' => "evaluator{$i}@example.com",
                 'phone_number' => "+9639" . fake()->unique()->numberBetween(31000000, 99999999),
                 'password' => Hash::make('password'),
-                'area_id' => rand(1, 5),
+                'area_id' => rand(3, 7),
                 'email_verified_at' => now(),
                 'phone_verified' => true,
             ]);

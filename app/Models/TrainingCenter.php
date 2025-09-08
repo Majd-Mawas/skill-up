@@ -121,4 +121,14 @@ class TrainingCenter extends Model implements HasMedia
     {
         return $query->where('name', 'like', '%' . $search . '%');
     }
+
+    public function icdlCards()
+    {
+        return $this->hasMany(ICDLCard::class);
+    }
+
+    public function icdlTests()
+    {
+        return $this->hasMany(ICDLTest::class);
+    }
 }
