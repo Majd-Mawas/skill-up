@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\TrainingCenterController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\API\CourseBookingController;
+use App\Http\Controllers\Api\CourseBookingController;
 use App\Http\Controllers\Api\CourseTrainerController;
 use App\Http\Controllers\Api\HallController;
 use App\Http\Controllers\Api\HomeController;
