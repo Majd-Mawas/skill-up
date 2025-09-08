@@ -8,6 +8,9 @@ use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Hall;
 use App\Models\HallBooking;
+use App\Models\PlacementTest;
+use App\Models\PlacementTestBooking;
+use App\Models\TrainingCenter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -300,6 +303,68 @@ class BookingController extends BaseController
         return $this->sendResponse(
             new BookingResource($hallBooking),
             'Hall booking created successfully',
+            null,
+            201
+        );
+    }
+
+    /**
+     * Create a new placement test booking.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createPlacementTestBooking(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'training_center_id' => 'required|exists:training_centers,id',
+            'booking_time' => 'required|date_format:h:i A',
+            'booking_date' => 'required|date_format:Y-m-d',
+            'test_name' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors()->toArray(), 422);
+        }
+
+        // Find the placement test by training center and name with case-insensitive search
+        $placementTest = PlacementTest::where('training_center_id', $request->training_center_id)
+            ->where(function($query) use ($request) {
+                $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->test_name) . '%'])
+                      ->orWhereRaw('LOWER(name) = ?', [strtolower($request->test_name)]);
+            })
+            ->first();
+
+        if (!$placementTest) {
+            return $this->sendError(
+                'Placement test not found for the specified training center and test name.',
+                [],
+                404
+            );
+        }
+
+        // Parse booking date and time
+        $bookingDateTime = Carbon::createFromFormat(
+            'Y-m-d h:i A',
+            $request->booking_date . ' ' . $request->booking_time
+        );
+
+
+        // Create the placement test booking
+        $placementTestBooking = PlacementTestBooking::create([
+            'placement_test_id' => $placementTest->id,
+            'booking_time' => $bookingDateTime,
+            'user_id' => Auth::id(),
+        ]);
+
+        return $this->sendResponse(
+            [
+                'id' => $placementTestBooking->id,
+                'test_name' => $placementTest->name,
+                'booking_time' => $placementTestBooking->booking_time->format('h:i A'),
+                'booking_date' => $placementTestBooking->booking_time->format('Y-m-d'),
+            ],
+            'Placement test booking created successfully',
             null,
             201
         );

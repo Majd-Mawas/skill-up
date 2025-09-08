@@ -64,14 +64,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::put('password', [UserProfileController::class, 'changePassword']);
     });
 
-    // Admin routes for managing institutes, courses, and categories
     Route::middleware('role:admin')->group(function () {
         Route::apiResource('institutes', TrainingCenterController::class)->except(['index', 'show']);
         Route::apiResource('courses', CourseController::class)->except(['index', 'show']);
         Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
     });
 
-    // Online course trainer routes (for admin and trainers)
     Route::middleware('role:admin,trainer')->group(function () {
         Route::get('courses/{course}/trainers', [CourseTrainerController::class, 'index']);
         Route::post('courses/{course}/trainers', [CourseTrainerController::class, 'store']);
@@ -80,10 +78,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::delete('courses/{course}/trainers/{user}', [CourseTrainerController::class, 'destroy']);
     });
 
-    // Hall booking routes
-    // Route::apiResource('hall/bookings', BookingController::class);
     Route::post('hall/bookings', [BookingController::class, 'createHallBooking']);
-    // Route::apiResource('hall-bookings', HallBookingController::class);
 
     // Course booking routes
     Route::prefix('course/bookings')->group(function () {
@@ -114,6 +109,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/', [ICDLTestBookingController::class, 'index']);
         Route::post('/', [ICDLTestBookingController::class, 'store']);
     });
+
+    Route::post('placement-test/bookings', [BookingController::class, 'createPlacementTestBooking']);
 });  // End of protected routes
 
 // Public routes

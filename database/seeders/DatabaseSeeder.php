@@ -40,7 +40,8 @@ class DatabaseSeeder extends Seeder
             HallBookingSeeder::class,
             ICDLCardSeeder::class,
             ICDLCardBookingSeeder::class,
-            ICDLTestSeeder::class
+            ICDLTestSeeder::class,
+            PlacementTestSeeder::class
         ]);
     }
 }

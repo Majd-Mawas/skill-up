@@ -12,6 +12,9 @@ class PlacementTestBooking extends Model
     protected $fillable = [
         'placement_test_id',
         'booking_id',
+        'user_id',
+        'booking_time'
+
     ];
 
     public function placementTest()
