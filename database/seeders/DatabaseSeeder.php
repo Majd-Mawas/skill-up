@@ -39,7 +39,8 @@ class DatabaseSeeder extends Seeder
             CategoryInterestSeeder::class,
             HallBookingSeeder::class,
             ICDLCardSeeder::class,
-            ICDLCardBookingSeeder::class
+            ICDLCardBookingSeeder::class,
+            ICDLTestSeeder::class
         ]);
     }
 }

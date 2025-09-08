@@ -25,7 +25,8 @@ class ICDLTestBookingController extends Controller
         // Validate request
         $validator = Validator::make($request->all(), [
             'training_center_id' => 'required|exists:training_centers,id',
-            'booking_time' => 'required|date_format:Y-m-d H:i',
+            'booking_time' => 'required|date_format:h:i A',
+            'booking_date' => 'required|date_format:Y-m-d',
             'test_type' => 'required|string',
             'notes' => 'nullable|string',
         ]);
@@ -42,11 +43,14 @@ class ICDLTestBookingController extends Controller
 
         $icdlTest = $trainingCenter->icdlTests()->first();
 
-        // Parse booking time
-        $bookingTime = Carbon::parse($request->booking_time);
+        // Combine booking date and time
+        $bookingDateTime = Carbon::createFromFormat(
+            'Y-m-d h:i A',
+            $request->booking_date . ' ' . $request->booking_time
+        );
 
         // Validate booking time (must be between 12 PM and 6 PM)
-        $hour = (int) $bookingTime->format('H');
+        $hour = (int) $bookingDateTime->format('H');
         if ($hour < 12 || $hour >= 18) {
             return response()->json([
                 'errors' => ['booking_time' => ['Booking time must be between 12 PM and 6 PM']]
@@ -55,7 +59,7 @@ class ICDLTestBookingController extends Controller
 
         // Check if the time slot is available (less than 5 bookings)
         $bookingsCount = ICDLTestBooking::where('training_center_id', $trainingCenter->id)
-            ->whereDate('booking_time', $bookingTime->format('Y-m-d'))
+            ->whereDate('booking_time', $bookingDateTime->format('Y-m-d'))
             ->whereRaw("HOUR(booking_time) = ?", [$hour])
             ->count();
 
@@ -74,7 +78,7 @@ class ICDLTestBookingController extends Controller
             'booking_status' => 'pending',
             'total_price' => $icdlTest->price,
             'notes' => $request->notes,
-            'booking_time' => $bookingTime,
+            'booking_time' => $bookingDateTime,
             'test_type' => $request->test_type,
         ]);
 
