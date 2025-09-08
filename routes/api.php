@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\OnlineCourseBookingController;
 use App\Http\Controllers\Api\ICDLCardBookingController;
 use App\Http\Controllers\Api\ICDLTestBookingController;
+use App\Http\Controllers\Api\PlacementTestBookingController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -88,6 +89,14 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         // Route::get('/{id}', [CourseBookingController::class, 'show']);
         // Route::put('/{id}', [CourseBookingController::class, 'update']);
         // Route::delete('/{id}', [CourseBookingController::class, 'destroy']);
+        // Route::get('/current', [CourseBookingController::class, 'currentCourses']);
+        // Route::get('/finished', [CourseBookingController::class, 'finishedCourses']);
+        Route::get('/all', [CourseBookingController::class, 'currentAndFinishedCourses']);
+    });
+
+    // Hall booking routes
+    Route::prefix('hall/bookings')->group(function () {
+        Route::get('/all', [\App\Http\Controllers\Api\HallBookingController::class, 'index']);
     });
 
     // Online Course booking routes
@@ -98,6 +107,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         // Route::get('/{id}', [OnlineCourseBookingController::class, 'show']);
         // Route::put('/{id}', [OnlineCourseBookingController::class, 'update']);
         // Route::delete('/{id}', [OnlineCourseBookingController::class, 'destroy']);
+        // Route::get('/current', [OnlineCourseBookingController::class, 'currentCourses']);
+        // Route::get('/finished', [OnlineCourseBookingController::class, 'finishedCourses']);
+        Route::get('/all', [OnlineCourseBookingController::class, 'currentAndFinishedCourses']);
     });
 
     Route::prefix('icdl-card/bookings')->group(function () {
@@ -108,9 +120,13 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::prefix('icdl-test/bookings')->group(function () {
         Route::get('/', [ICDLTestBookingController::class, 'index']);
         Route::post('/', [ICDLTestBookingController::class, 'store']);
+        Route::get('/all', [ICDLTestBookingController::class, 'index']);
     });
 
-    Route::post('placement-test/bookings', [BookingController::class, 'createPlacementTestBooking']);
+    Route::prefix('placement-test/bookings')->group(function () {
+        Route::post('/', [BookingController::class, 'createPlacementTestBooking']);
+        Route::get('/all', [PlacementTestBookingController::class, 'index']);
+    });
 });  // End of protected routes
 
 // Public routes

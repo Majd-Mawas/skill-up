@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\ICDLTest;
 use App\Models\ICDLTestBooking;
 use App\Models\TrainingCenter;
@@ -12,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class ICDLTestBookingController extends Controller
+class ICDLTestBookingController extends BaseController
 {
     /**
      * Store a newly created ICDL test booking in storage.
@@ -171,8 +170,11 @@ class ICDLTestBookingController extends Controller
         // Get the paginated results
         $bookings = $bookings->with(['icdlTest', 'trainingCenter'])
             ->latest()
-            ->paginate(10);
+            ->paginate($request->input('per_page', 10));
 
-        return response()->json($bookings);
+        return $this->sendResponse(
+            $bookings,
+            'ICDL test bookings retrieved successfully'
+        );
     }
 }

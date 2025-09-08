@@ -185,4 +185,43 @@ class OnlineCourseBookingController extends BaseController
             ],
         ], 'Available online courses retrieved successfully');
     }
+
+    /**
+     * Display a listing of both current and finished online course bookings for the authenticated user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function currentAndFinishedCourses(Request $request)
+    {
+        // Get current courses
+        $currentQuery = OnlineCourseBooking::with(['course', 'user'])
+            ->where('user_id', Auth::id())
+            ->where('booking_status', 'confirmed')
+            ->whereDate('start_date', '<=', now())
+            ->latest();
+
+        $currentBookings = $currentQuery->get();
+
+        // Get finished courses
+        $finishedQuery = OnlineCourseBooking::with(['course', 'user'])
+            ->where('user_id', Auth::id())
+            ->where(function($query) {
+                $query->where('booking_status', 'completed')
+                      ->orWhere(function($q) {
+                          // Consider courses as finished if they started more than course duration ago
+                          $q->where('booking_status', 'confirmed')
+                            ->whereHas('course', function($courseQuery) {
+                                $courseQuery->whereRaw('DATE_ADD(online_course_bookings.start_date, INTERVAL courses.duration_hours HOUR) < NOW()');
+                            });
+                      });
+            })
+            ->latest();
+
+        $finishedBookings = $finishedQuery->get();
+
+        return $this->sendResponse([
+            'current_bookings' => $currentBookings,
+            'finished_bookings' => $finishedBookings
+        ], 'Current and finished online course bookings retrieved successfully');
+    }
 }
