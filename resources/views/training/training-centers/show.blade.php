@@ -10,6 +10,15 @@
                     </p>
                 </div>
                 <div class="p-6">
+                    <!-- Center Logo -->
+                    @if($trainingCenter->getFirstMediaUrl('logo'))
+                    <div class="mb-6 flex justify-center lg:justify-start">
+                        <img src="{{ $trainingCenter->getFirstMediaUrl('logo', 'medium') }}" 
+                             alt="{{ $trainingCenter->name }} Logo" 
+                             class="h-32 w-32 object-cover rounded-lg border border-gray-200 shadow-sm">
+                    </div>
+                    @endif
+                    
                     <div class="grid lg:grid-cols-2 gap-6">
                         <!-- Name -->
                         <div>

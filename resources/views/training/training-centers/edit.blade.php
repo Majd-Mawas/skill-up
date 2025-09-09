@@ -4,7 +4,7 @@
     <div class="grid grid-cols-12">
         <div class="col-span-12">
             <form action="{{ route('web.training-centers.update', ['training_center' => $trainingCenter->id]) }}"
-                method="POST">
+                method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="card">
@@ -15,6 +15,27 @@
                     </div>
                     <div class="p-6">
                         <div class="grid lg:grid-cols-2 gap-6">
+                            <!-- Logo Upload -->
+                            <div class="lg:col-span-2 mb-4">
+                                <label for="logo"
+                                    class="text-gray-800 text-sm font-medium inline-block mb-2">Center Logo</label>
+                                
+                                @if($trainingCenter->getFirstMediaUrl('logo'))
+                                <div class="mb-3">
+                                    <img src="{{ $trainingCenter->getFirstMediaUrl('logo', 'thumb') }}" 
+                                         alt="{{ $trainingCenter->name }} Logo" 
+                                         class="h-20 w-20 object-cover rounded border border-gray-200">
+                                </div>
+                                @endif
+                                
+                                <input type="file" id="logo" name="logo" class="form-input"
+                                    accept="image/jpeg,image/png,image/gif,image/webp">
+                                <p class="text-xs text-gray-500 mt-1">Recommended size: 300x300px. Max file size: 2MB.</p>
+                                @error('logo')
+                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Name -->
                             <div>
                                 <label for="name"

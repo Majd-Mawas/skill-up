@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Users', 'sub_title' => 'List', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
+@extends('layouts.vertical', ['title' => 'Online Courses', 'sub_title' => 'All', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('content')
     <style>
@@ -14,12 +14,12 @@
                     <div class="border rounded-lg divide-y divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
                         <div class="py-3 px-4 flex flex-wrap justify-between">
                             <div>
-                                <form method="GET" action="{{ route('web.users.index') }}">
+                                <form method="GET" action="{{ route('web.online-courses.index') }}">
                                     <div class="relative">
                                         <label for="table-search" class="sr-only">Search</label>
                                         <input type="text" name="search" id="table-search"
                                             value="{{ request('search') }}" class="form-input ps-11"
-                                            placeholder="Search for users">
+                                            placeholder="Search for items">
                                         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
                                             <svg class="h-3.5 w-3.5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
                                                 width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -29,6 +29,12 @@
                                         </div>
                                     </div>
                                 </form>
+                            </div>
+                            <div>
+                                <a href="{{ route('web.online-courses.create') }}"
+                                    class="btn border-primary text-primary hover:bg-primary hover:text-white">
+                                    Create Online Course
+                                </a>
                             </div>
                         </div>
                         <div class="overflow-hidden">
@@ -44,117 +50,105 @@
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            {{ __('ID') }}
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                             {{ __('Name') }}
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            {{ __('Email') }}
+                                            {{ __('Category') }}
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            {{ __('Role') }}
+                                            {{ __('Trainers') }}
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            {{ __('Status') }}
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            {{ __('Created At') }}
+                                            {{ __('Price') }}
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">
-                                            {{ __('Actions') }}
+                                            {{ __('Action') }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    @forelse($users as $user)
+                                    @foreach ($courses as $course)
                                         <tr>
                                             <td class="py-3 ps-4">
                                                 <div class="flex items-center h-5">
-                                                    <input id="table-pagination-checkbox-{{ $user->id }}"
-                                                        type="checkbox" class="form-checkbox rounded">
-                                                    <label for="table-pagination-checkbox-{{ $user->id }}"
+                                                    <input id="table-pagination-checkbox-{{ $course->id }}" type="checkbox"
+                                                        class="form-checkbox rounded">
+                                                    <label for="table-pagination-checkbox-{{ $course->id }}"
                                                         class="sr-only">Checkbox</label>
                                                 </div>
                                             </td>
                                             <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                                {{ $user->id }}
+                                                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                                {{ $course->name }}
                                             </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                {{ $user->name }}
+                                                {{ $course->category->name }}
                                             </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                                {{ $user->email }}
+                                            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                                                {{ $course->trainers->count() }} trainer(s)
                                             </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                                <div class="flex flex-wrap gap-1">
-                                                    @foreach ($user->roles as $role)
-                                                        <span
-                                                            class="px-2 py-1 text-xs font-medium rounded-full {{ $role->getEnum()->color() }}">
-                                                            {{ $role->getEnum()->label() }}
-                                                        </span>
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $user->phone_verified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                    {{ $user->phone_verified ? __('Active') : __('Inactive') }}
-                                                </span>
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                                {{ $user->created_at->format('M d, Y') }}
+                                            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                                                @if($course->trainers->isNotEmpty())
+                                                    {{ number_format($course->online_price, 2) }} KD
+                                                @else
+                                                    Not set
+                                                @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <a class="text-primary hover:text-sky-700 mx-2"
-                                                    href="{{ route('web.users.show', $user->id) }}">
-                                                    {{ __('View') }}
+                                                    href="{{ route('web.online-courses.show', ['online_course' => $course->id]) }}">
+                                                    Show
                                                 </a>
-                                                {{-- <a class="text-primary hover:text-sky-700 mx-2"
-                                                    href="{{ route('web.users.edit', $user->id) }}">
-                                                    {{ __('Edit') }}
-                                                </a> --}}
-                                                <form action="{{ route('web.users.destroy', $user->id) }}" method="POST"
-                                                    class="inline"
-                                                    onsubmit="return confirm('{{ __('Are you sure you want to delete this user?') }}');">
+                                                <a class="text-primary hover:text-sky-700 mx-2"
+                                                    href="{{ route('web.online-courses.edit', ['online_course' => $course->id]) }}">
+                                                    Edit
+                                                </a>
+                                                <form
+                                                    action="{{ route('web.online-courses.destroy', ['online_course' => $course->id]) }}"
+                                                    method="POST" class="inline-block">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                        class="text-primary hover:text-red-700 bg-transparent border-none p-0 m-0 cursor-pointer">
-                                                        {{ __('Delete') }}
+                                                        class="text-red-500 hover:text-red-700 mx-2 delete-btn"
+                                                        data-name="{{ $course->name }}">
+                                                        Delete
                                                     </button>
                                                 </form>
                                             </td>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500">
-                                                {{ __('No users found.') }}
-                                            </td>
-                                        </tr>
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        <div>
-                            <div class="py-4 px-4">
-                                {{ $users->appends(request()->query())->links() }}
-                            </div>
+                        <div class="px-4 py-4">
+                            {{ $courses->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Delete confirmation
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const name = this.getAttribute('data-name');
+                    if (confirm(`Are you sure you want to delete the online course "${name}"?`)) {
+                        this.closest('form').submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

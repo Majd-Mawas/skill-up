@@ -38,6 +38,12 @@
                 </a>
             </li>
             <li class="menu-item">
+                <a href="{{ route('web.online-courses.index') }}" class="menu-link">
+                    <span class="menu-icon"><i class="mgc_computer_line"></i></span>
+                    <span class="menu-text"> Online Courses </span>
+                </a>
+            </li>
+            <li class="menu-item">
                 <a href="{{ route('web.training-centers.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_building_1_line"></i></span>
                     <span class="menu-text"> Training Centers </span>

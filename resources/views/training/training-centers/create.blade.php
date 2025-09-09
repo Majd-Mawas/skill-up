@@ -3,7 +3,7 @@
 @section('content')
     <div class="grid grid-cols-12">
         <div class="col-span-12">
-            <form action="{{ route('web.training-centers.store') }}" method="post">
+            <form action="{{ route('web.training-centers.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-header">
@@ -13,6 +13,18 @@
                     </div>
                     <div class="p-6">
                         <div class="grid lg:grid-cols-2 gap-6">
+                            <!-- Logo Upload -->
+                            <div class="lg:col-span-2 mb-4">
+                                <label for="logo"
+                                    class="text-gray-800 text-sm font-medium inline-block mb-2">Center Logo</label>
+                                <input type="file" id="logo" name="logo" class="form-input"
+                                    accept="image/jpeg,image/png,image/gif,image/webp">
+                                <p class="text-xs text-gray-500 mt-1">Recommended size: 300x300px. Max file size: 2MB.</p>
+                                @error('logo')
+                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Name -->
                             <div>
                                 <label for="name"

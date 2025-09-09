@@ -49,9 +49,16 @@ class TrainingCenterController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'area_id' => ['required', 'exists:areas,id'],
             'status' => ['required', 'string', 'in:active,inactive'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10048'],
         ]);
 
         $trainingCenter = TrainingCenter::create($validated);
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            $trainingCenter->addMediaFromRequest('logo')
+                ->toMediaCollection('logo');
+        }
 
         return redirect()
             ->route('web.training-centers.index', $trainingCenter)
@@ -93,9 +100,19 @@ class TrainingCenterController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'area_id' => ['required', 'exists:areas,id'],
             'status' => ['required', 'string', 'in:active,inactive'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10048'],
         ]);
 
         $trainingCenter->update($validated);
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            // Remove existing logo if any
+            $trainingCenter->clearMediaCollection('logo');
+            // Add new logo
+            $trainingCenter->addMediaFromRequest('logo')
+                ->toMediaCollection('logo');
+        }
 
         return redirect()
             ->route('web.training-centers.show', $trainingCenter)

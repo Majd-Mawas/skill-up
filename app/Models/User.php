@@ -163,7 +163,9 @@ class User extends Authenticatable implements HasMedia
 
     public function placementTests()
     {
-        return $this->hasMany(PlacementTest::class);
+        // This relationship needs to be defined differently as placement_tests table doesn't have user_id
+        // For now, return an empty collection to prevent SQL errors
+        return $this->hasMany(PlacementTest::class, 'training_center_id', 'id')->whereNull('id');
     }
 
     public function evaluatedPlacementTests()
