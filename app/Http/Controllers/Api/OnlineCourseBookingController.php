@@ -194,7 +194,7 @@ class OnlineCourseBookingController extends BaseController
     public function currentAndFinishedCourses(Request $request)
     {
         // Get current courses
-        $currentQuery = OnlineCourseBooking::with(['course', 'user'])
+        $currentQuery = OnlineCourseBooking::with(['course', 'user', 'trainer'])
             ->where('user_id', Auth::id())
             // ->where('booking_status', 'confirmed')
             ->whereDate('start_date', '>=', now())
@@ -203,7 +203,7 @@ class OnlineCourseBookingController extends BaseController
         $currentBookings = $currentQuery->get();
 
         // Get finished courses
-        $finishedQuery = OnlineCourseBooking::with(['course', 'user'])
+        $finishedQuery = OnlineCourseBooking::with(['course', 'user', 'trainer'])
             ->where('user_id', Auth::id())
             ->where(function ($query) {
                 $query
