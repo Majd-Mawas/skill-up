@@ -134,6 +134,6 @@ class TrainingCenterSeeder extends Seeder
         }
 
         // إنشاء مراكز عشوائية إضافية للحصول على مزيد من التنوع
-        TrainingCenter::factory()->count(10)->create();
+        // TrainingCenter::factory()->count(10)->create();
     }
 }
