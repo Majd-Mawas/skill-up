@@ -67,7 +67,7 @@ class RegisteredUserController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $user->load(['interests', 'roles']);
+        $user->load(['interests']);
 
         return $this->successResponse([
             'user' => $user,
