@@ -93,7 +93,7 @@ class User extends Authenticatable implements HasMedia
             ->sharpen(10)
             ->performOnCollections('avatar');
     }
-    
+
     /**
      * Get the ICDL card bookings for the user.
      */
@@ -187,12 +187,12 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(HallBooking::class);
     }
-    
+
     public function onlineCourseBookings()
     {
         return $this->hasMany(OnlineCourseBooking::class);
     }
-    
+
     public function onlineCourses()
     {
         return $this->belongsToMany(Course::class, 'course_trainer')

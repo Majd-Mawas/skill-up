@@ -46,6 +46,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::post('courses/{course}/levels/reorder', [CourseLevelController::class, 'reorder'])->name('courses.levels.reorder');
         });
         Route::resource('users', UserController::class);
+        Route::resource('trainers', \App\Http\Controllers\Web\TrainerController::class);
         Route::resource('categories', CategoryController::class);
     });
     Route::get('', [RoutingController::class, 'index'])->name('root');

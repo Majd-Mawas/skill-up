@@ -4,13 +4,13 @@
     <a href="{{ route('any', 'index') }}" class="logo-box">
         <!-- Light Brand Logo -->
         <div class="logo-light">
-            <img src="/images/logo-light.png" class="logo-lg h-6" alt="Light logo">
+            <img src="/images/logo-light.png" class="logo-lg h-16" style="height: 50px;" alt="Light logo">
             <img src="/images/logo-sm-light.png" class="logo-sm" alt="Small logo">
         </div>
 
         <!-- Dark Brand Logo -->
         <div class="logo-dark">
-            <img src="/images/logo-dark.png" class="logo-lg h-6" alt="Dark logo">
+            <img src="/images/logo-dark.png" class="logo-lg h-16" style="height: 50px;" alt="Dark logo">
             <img src="/images/logo-sm-dark.png" class="logo-sm" alt="Small logo">
         </div>
     </a>
@@ -59,6 +59,13 @@
                 <a href="{{ route('web.users.index') }}" class="menu-link">
                     <span class="menu-icon"><i class="mgc_user_3_line"></i></span>
                     <span class="menu-text"> Users </span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('web.trainers.index') }}" class="menu-link">
+                    <span class="menu-icon"><i class="mgc_user_2_line"></i></span>
+                    <span class="menu-text"> Trainers </span>
                 </a>
             </li>
 
