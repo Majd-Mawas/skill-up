@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Enums\Role as EnumsRole;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Interest;
+use App\Models\Role;
+use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -50,6 +52,10 @@ class RegisteredUserController extends Controller
 
         $user->interests()->attach($request->interests);
 
+        // Assign student role to the user
+        $studentRole = Role::where('name', EnumsRole::STUDENT->value)->first();
+        $user->roles()->attach($studentRole);
+
         event(new Registered($user));
         if (env('APP_DEV')) {
             $user->phone_verification_code = '0000';
@@ -61,7 +67,7 @@ class RegisteredUserController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $user->load('interests');
+        $user->load(['interests', 'roles']);
 
         return $this->successResponse([
             'user' => $user,

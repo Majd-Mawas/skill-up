@@ -29,55 +29,67 @@
                             </p>
                         </div>
 
-                        <div class="border-t border-gray-200 pt-4">
-                            <div class="grid grid-cols-1 gap-y-4">
-                                <div class="flex items-center">
-                                    <i class="mgc_mail_line text-lg me-3 text-primary-500"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-500">Email</p>
-                                        <p class="font-medium">{{ $user->email }}</p>
+                        <div class="border-t border-gray-200 pt-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                    <div class="p-3 bg-primary-50 rounded-full">
+                                        <i class="mgc_mail_line text-xl text-primary-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-400">Email</p>
+                                        <p class="text-base font-semibold text-gray-700">{{ $user->email }}</p>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center">
-                                    <i class="mgc_phone_line text-lg me-3 text-primary-500"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-500">Phone</p>
-                                        <p class="font-medium">{{ $user->phone_number ?? 'Not provided' }}</p>
+                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                    <div class="p-3 bg-primary-50 rounded-full">
+                                        <i class="mgc_phone_line text-xl text-primary-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-400">Phone</p>
+                                        <p class="text-base font-semibold text-gray-700">{{ $user->phone_number ?? 'Not provided' }}</p>
                                     </div>
                                 </div>
 
                                 @if ($user->area)
-                                    <div class="flex items-center">
-                                        <i class="mgc_map_pin_line text-lg me-3 text-primary-500"></i>
-                                        <div>
-                                            <p class="text-sm text-gray-500">Area</p>
-                                            <p class="font-medium">{{ $user->area->name }}</p>
-                                        </div>
+                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                    <div class="p-3 bg-primary-50 rounded-full">
+                                        <i class="mgc_map_pin_line text-xl text-primary-600"></i>
                                     </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-400">Area</p>
+                                        <p class="text-base font-semibold text-gray-700">{{ $user->area->name }}</p>
+                                    </div>
+                                </div>
                                 @endif
 
-                                <div class="flex items-center">
-                                    <i class="mgc_user_3_line text-lg me-3 text-primary-500"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-500">Gender</p>
-                                        <p class="font-medium">{{ ucfirst($user->gender ?? 'Not specified') }}</p>
+                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                    <div class="p-3 bg-primary-50 rounded-full">
+                                        <i class="mgc_user_3_line text-xl text-primary-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-400">Gender</p>
+                                        <p class="text-base font-semibold text-gray-700">{{ ucfirst($user->gender ?? 'Not specified') }}</p>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center">
-                                    <i class="mgc_book_2_line text-lg me-3 text-primary-500"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-500">Study</p>
-                                        <p class="font-medium">{{ $user->study ?? 'Not provided' }}</p>
+                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                    <div class="p-3 bg-primary-50 rounded-full">
+                                        <i class="mgc_book_2_line text-xl text-primary-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-400">Study</p>
+                                        <p class="text-base font-semibold text-gray-700">{{ $user->study ?? 'Not provided' }}</p>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center">
-                                    <i class="mgc_calendar_line text-lg me-3 text-primary-500"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-500">Joined</p>
-                                        <p class="font-medium">{{ $user->created_at->format('M d, Y') }}</p>
+                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                    <div class="p-3 bg-primary-50 rounded-full">
+                                        <i class="mgc_calendar_line text-xl text-primary-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-400">Joined</p>
+                                        <p class="text-base font-semibold text-gray-700">{{ $user->created_at->format('M d, Y') }}</p>
                                     </div>
                                 </div>
                             </div>
