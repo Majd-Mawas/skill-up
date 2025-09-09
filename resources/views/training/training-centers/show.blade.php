@@ -11,14 +11,14 @@
                 </div>
                 <div class="p-6">
                     <!-- Center Logo -->
-                    @if($trainingCenter->getFirstMediaUrl('logo'))
-                    <div class="mb-6 flex justify-center lg:justify-start">
-                        <img src="{{ $trainingCenter->getFirstMediaUrl('logo', 'medium') }}" 
-                             alt="{{ $trainingCenter->name }} Logo" 
-                             class="h-32 w-32 object-cover rounded-lg border border-gray-200 shadow-sm">
-                    </div>
+                    @if ($trainingCenter->getFirstMediaUrl('logo'))
+                        <div class="mb-6 flex justify-center lg:justify-start">
+                            <img src="{{ $trainingCenter->getFirstMediaUrl('logo', 'medium') }}"
+                                alt="{{ $trainingCenter->name }} Logo"
+                                class="h-32 w-32 object-cover rounded-lg border border-gray-200 shadow-sm">
+                        </div>
                     @endif
-                    
+
                     <div class="grid lg:grid-cols-2 gap-6">
                         <!-- Name -->
                         <div>
@@ -198,6 +198,362 @@
                                         <tr>
                                             <td colspan="6" class="text-center py-4">
                                                 {{ __('No courses found for this training center.') }}
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Course Bookings -->
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('Course Bookings') }}
+                            </h3>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                {{ $trainingCenter->courseBookings->count() }} {{ __('Bookings') }}
+                            </span>
+                        </div>
+                        <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+                            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Student') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Course') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Start Date') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Payment Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Total Price') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    @forelse ($trainingCenter->courseBookings as $booking)
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->user->name }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->course->name }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->start_date->format('Y-m-d') }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                    {{ ucfirst($booking->payment_status) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->booking_status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                                    {{ ucfirst($booking->booking_status) }}
+                                                </span>
+                                            </td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ number_format($booking->total_price, 2) }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <div class="flex space-x-2">
+                                                    <a href="#"
+                                                        class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
+                                                        <i class="mgc_eye_line"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7"
+                                                class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <i class="mgc_file_forbid_line text-3xl mb-2 text-gray-400"></i>
+                                                    {{ __('No course bookings found for this training center.') }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Placement Tests -->
+                    <!-- Placement Test Bookings -->
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('Placement Test Bookings') }}
+                            </h3>
+                            <span
+                                class="px-3 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                                {{ $trainingCenter->placementTestBookings->count() }} {{ __('Bookings') }}
+                            </span>
+                        </div>
+                        <div
+                            class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow transition-shadow duration-300">
+                            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Student') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Test Type') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Time') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Payment Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    @forelse ($trainingCenter->placementTestBookings as $booking)
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                            {{-- @each($booking->booking_time) --}}
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                {{ $booking->user->name }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->placementTest->name }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->booking_time }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->payment_status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' }}">
+                                                    {{ ucfirst($booking->payment_status ?? 'pending') }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->booking_status === 'confirmed' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : ($booking->booking_status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : ($booking->booking_status === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')) }}">
+                                                    {{ ucfirst($booking->booking_status ?? 'pending') }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <div class="flex space-x-2">
+                                                    <a href="#"
+                                                        class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
+                                                        <i class="mgc_eye_line"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6"
+                                                class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                                                <div class="flex flex-col items-center justify-center space-y-2">
+                                                    <i
+                                                        class="mgc_calendar_line text-4xl text-gray-400 dark:text-gray-600"></i>
+                                                    <p>{{ __('No placement test bookings found for this training center.') }}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ICDL Test Bookings -->
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('ICDL Test Bookings') }}
+                            </h3>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                {{ $trainingCenter->icdlTestBookings->count() }} {{ __('Bookings') }}
+                            </span>
+                        </div>
+                        <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+                            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Student') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Test Type') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Time') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Payment Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Total Price') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    @forelse ($trainingCenter->icdlTestBookings as $booking)
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->user->name }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->test_type }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->booking_time->format('Y-m-d H:i') }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                    {{ ucfirst($booking->payment_status) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->booking_status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                                    {{ ucfirst($booking->booking_status) }}
+                                                </span>
+                                            </td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ number_format($booking->total_price, 2) }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <div class="flex space-x-2">
+                                                    <a href="#"
+                                                        class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
+                                                        <i class="mgc_eye_line"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7"
+                                                class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <i class="mgc_file_forbid_line text-3xl mb-2 text-gray-400"></i>
+                                                    {{ __('No ICDL test bookings found for this training center.') }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ICDL Card Bookings -->
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('ICDL Card Bookings') }}
+                            </h3>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-teal-100 text-teal-800">
+                                {{ $trainingCenter->icdlCardBookings->count() }} {{ __('Bookings') }}
+                            </span>
+                        </div>
+                        <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+                            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Student') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Full Name (English)') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Time') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Payment Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Booking Status') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Total Price') }}</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            {{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    @forelse ($trainingCenter->icdlCardBookings as $booking)
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->user->name }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->full_name_english }}</td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ $booking->booking_time->format('Y-m-d H:i') }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                    {{ ucfirst($booking->payment_status) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <span
+                                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $booking->booking_status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                                    {{ ucfirst($booking->booking_status) }}
+                                                </span>
+                                            </td>
+                                            <td
+                                                class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                                {{ number_format($booking->total_price, 2) }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <div class="flex space-x-2">
+                                                    <a href="#"
+                                                        class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
+                                                        <i class="mgc_eye_line"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7"
+                                                class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <i class="mgc_file_forbid_line text-3xl mb-2 text-gray-400"></i>
+                                                    {{ __('No ICDL card bookings found for this training center.') }}
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforelse

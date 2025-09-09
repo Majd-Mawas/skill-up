@@ -6,31 +6,39 @@
             <div class="card">
                 <div class="card-header">
                     <div class="flex justify-between items-center">
-                        <h4 class="card-title">Create New Online Course</h4>
-                        <a href="{{ route('web.online-courses.index') }}" class="btn btn-sm btn-secondary">Back to List</a>
+                        <h4 class="card-title text-lg font-semibold">Create New Online Course</h4>
+                        <a href="{{ route('web.online-courses.index') }}"
+                            class="btn btn-sm btn-secondary flex items-center gap-1"><i
+                                class="mgc_arrow_left_line text-base"></i> Back to List</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('web.online-courses.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mx-4 my-4">
                             <div>
                                 <div class="mb-4">
-                                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Course Name</label>
+                                    <label for="name"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Course
+                                        Name</label>
                                     <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                        class="form-input @error('name') border-red-500 @enderror" required>
+                                        class="form-input w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('name') border-red-500 @enderror"
+                                        required>
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                                    <label for="category_id"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
                                     <select name="category_id" id="category_id"
-                                        class="form-select @error('category_id') border-red-500 @enderror" required>
+                                        class="form-select w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('category_id') border-red-500 @enderror"
+                                        required>
                                         <option value="">Select Category</option>
                                         @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}</option>
                                         @endforeach
                                     </select>
@@ -40,19 +48,28 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                                    <label for="description"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                                     <textarea name="description" id="description" rows="4"
-                                        class="form-textarea @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                                        class="form-textarea w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
                                     @error('description')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="online_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Online Price (KD)</label>
-                                    <input type="number" step="0.01" name="online_price" id="online_price"
-                                        value="{{ old('online_price') }}"
-                                        class="form-input @error('online_price') border-red-500 @enderror" required>
+                                    <label for="online_price"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Online Price
+                                        (SP)</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-500 sm:text-sm">SP</span>
+                                        </div>
+                                        <input type="number" step="0.01" name="online_price" id="online_price"
+                                            value="{{ old('online_price') }}"
+                                            class="form-input pl-12 w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('online_price') border-red-500 @enderror"
+                                            required>
+                                    </div>
                                     @error('online_price')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
@@ -61,23 +78,28 @@
 
                             <div>
                                 <div class="mb-4">
-                                    <label for="trainers" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Trainers</label>
+                                    <label for="trainers"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Trainers</label>
                                     <select name="trainers[]" id="trainers" multiple
-                                        class="form-multiselect @error('trainers') border-red-500 @enderror">
+                                        class="form-multiselect w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('trainers') border-red-500 @enderror">
                                         @foreach ($trainers as $trainer)
-                                            <option value="{{ $trainer->id }}" {{ in_array($trainer->id, old('trainers', [])) ? 'selected' : '' }}>
+                                            <option value="{{ $trainer->id }}"
+                                                {{ in_array($trainer->id, old('trainers', [])) ? 'selected' : '' }}>
                                                 {{ $trainer->name }}</option>
                                         @endforeach
                                     </select>
+                                    <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple trainers</p>
                                     @error('trainers')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="prerequisites" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prerequisites (one per line)</label>
+                                    <label for="prerequisites"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prerequisites
+                                        (one per line)</label>
                                     <textarea name="prerequisites" id="prerequisites" rows="3"
-                                        class="form-textarea @error('prerequisites') border-red-500 @enderror">{{ old('prerequisites') }}</textarea>
+                                        class="form-textarea w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('prerequisites') border-red-500 @enderror">{{ old('prerequisites') }}</textarea>
                                     <p class="text-xs text-gray-500 mt-1">Enter each prerequisite on a new line</p>
                                     @error('prerequisites')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -85,9 +107,11 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="learning_outcomes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Learning Outcomes (one per line)</label>
+                                    <label for="learning_outcomes"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Learning
+                                        Outcomes (one per line)</label>
                                     <textarea name="learning_outcomes" id="learning_outcomes" rows="3"
-                                        class="form-textarea @error('learning_outcomes') border-red-500 @enderror">{{ old('learning_outcomes') }}</textarea>
+                                        class="form-textarea w-full rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 @error('learning_outcomes') border-red-500 @enderror">{{ old('learning_outcomes') }}</textarea>
                                     <p class="text-xs text-gray-500 mt-1">Enter each learning outcome on a new line</p>
                                     @error('learning_outcomes')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -95,9 +119,21 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Course Image</label>
-                                    <input type="file" name="image" id="image"
-                                        class="form-input @error('image') border-red-500 @enderror">
+                                    <label for="image"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Course
+                                        Image</label>
+                                    <div class="mt-1 flex items-center">
+                                        <span
+                                            class="inline-block h-12 w-12 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700">
+                                            <svg class="h-full w-full text-gray-300 dark:text-gray-600" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </span>
+                                        <input type="file" name="image" id="image" accept="image/*"
+                                            class="ml-5 py-2 px-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 @error('image') border-red-500 @enderror">
+                                    </div>
                                     <p class="text-xs text-gray-500 mt-1">Recommended size: 800x600 pixels</p>
                                     @error('image')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -107,7 +143,8 @@
                         </div>
 
                         <div class="mt-6 text-right">
-                            <button type="submit" class="btn btn-primary">Create Online Course</button>
+                            <button type="submit" class="btn btn-primary flex items-center gap-1 ml-auto"><i
+                                    class="mgc_add_line text-base"></i> Create Online Course</button>
                         </div>
                     </form>
                 </div>

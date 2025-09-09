@@ -75,8 +75,8 @@
                                         <tr>
                                             <td class="py-3 ps-4">
                                                 <div class="flex items-center h-5">
-                                                    <input id="table-pagination-checkbox-{{ $course->id }}" type="checkbox"
-                                                        class="form-checkbox rounded">
+                                                    <input id="table-pagination-checkbox-{{ $course->id }}"
+                                                        type="checkbox" class="form-checkbox rounded">
                                                     <label for="table-pagination-checkbox-{{ $course->id }}"
                                                         class="sr-only">Checkbox</label>
                                                 </div>
@@ -93,8 +93,8 @@
                                                 {{ $course->trainers->count() }} trainer(s)
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-                                                @if($course->trainers->isNotEmpty())
-                                                    {{ number_format($course->online_price, 2) }} KD
+                                                @if ($course->trainers->isNotEmpty())
+                                                    {{ number_format($course->online_price, 2) }} SP
                                                 @else
                                                     Not set
                                                 @endif

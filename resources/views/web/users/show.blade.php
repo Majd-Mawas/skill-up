@@ -111,52 +111,7 @@
             <!-- Bookings and Enrollments -->
             <div class="col-span-12 lg:col-span-8">
                 <h3 class="text-xl font-bold mb-6 text-gray-800 border-b pb-3 flex items-center"><i
-                        class="mgc_bookmark_line text-xl me-2 text-primary-700"></i>Bookings & Enrollments</h3>
-
-                <!-- Course Enrollments -->
-                <div class="card mb-8 shadow-sm hover:shadow-md transition-shadow duration-300">
-                    <div class="card-header bg-primary-50 py-3 px-4 flex items-center border-b border-primary-100">
-                        <i class="mgc_book_2_line text-xl me-2 text-primary-700"></i>
-                        <h4 class="text-lg font-semibold text-primary-700">Course Enrollments</h4>
-                    </div>
-                    <div class="card-body p-5">
-                        @if ($user->enrollments->count() > 0)
-                            <div class="overflow-x-auto">
-                                <table class="table table-centered table-bordered table-hover w-full">
-                                    <thead class="bg-light">
-                                        <tr>
-                                            <th class="py-3">Course</th>
-                                            <th class="py-3">Level</th>
-                                            <th class="py-3">Status</th>
-                                            <th class="py-3">Enrolled On</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($user->enrollments as $enrollment)
-                                            <tr>
-                                                <td class="py-2">{{ $enrollment->course->name }}</td>
-                                                <td class="py-2">{{ $enrollment->course->level ?? 'N/A' }}</td>
-                                                <td class="py-2">
-                                                    <span
-                                                        class="badge {{ $enrollment->status === 'active' ? 'bg-success-500' : 'bg-warning-500' }}">
-                                                        {{ ucfirst($enrollment->status) }}
-                                                    </span>
-                                                </td>
-                                                <td class="py-2">{{ $enrollment->created_at->format('M d, Y') }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <div class="text-center py-6">
-                                <i class="mgc_book_2_line text-5xl text-gray-400 mb-2"></i>
-                                <p class="mt-3 text-gray-500 font-medium">No course enrollments found.</p>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
+                        class="mgc_bookmark_line text-xl me-2 text-primary-700"></i>Bookings</h3>
                 <!-- Hall Bookings -->
                 <div class="card mb-8 shadow-sm hover:shadow-md transition-shadow duration-300">
                     <div class="card-header bg-primary-50 py-3 px-4 flex items-center border-b border-primary-100">

@@ -131,4 +131,36 @@ class TrainingCenter extends Model implements HasMedia
     {
         return $this->hasMany(ICDLTest::class);
     }
+
+    public function courseBookings()
+    {
+        return $this->hasMany(CourseBooking::class);
+    }
+
+    public function icdlTestBookings()
+    {
+        return $this->hasMany(ICDLTestBooking::class);
+    }
+
+    public function icdlCardBookings()
+    {
+        return $this->hasMany(ICDLCardBooking::class);
+    }
+
+    public function placementTests()
+    {
+        return $this->hasMany(PlacementTest::class);
+    }
+    
+    public function placementTestBookings()
+    {
+        return $this->hasManyThrough(
+            PlacementTestBooking::class,
+            PlacementTest::class,
+            'training_center_id', // Foreign key on PlacementTest table
+            'placement_test_id', // Foreign key on PlacementTestBooking table
+            'id', // Local key on TrainingCenter table
+            'id' // Local key on PlacementTest table
+        );
+    }
 }

@@ -71,8 +71,8 @@ class TrainingCenterController extends Controller
     public function show(TrainingCenter $trainingCenter)
     {
 
-        $trainingCenter->load(['area', 'halls','courses']);
-        // return $trainingCenter;
+        $trainingCenter->load(['area', 'halls', 'courses']);
+        // return $trainingCenter->placementTestBookings->load(['user']);
 
         return view('training.training-centers.show', compact('trainingCenter'));
     }

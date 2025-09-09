@@ -26,4 +26,9 @@ class PlacementTestBooking extends Model
     {
         return $this->belongsTo(Booking::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
