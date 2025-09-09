@@ -31,7 +31,8 @@
 
                         <div class="border-t border-gray-200 pt-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                <div
+                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                                     <div class="p-3 bg-primary-50 rounded-full">
                                         <i class="mgc_mail_line text-xl text-primary-600"></i>
                                     </div>
@@ -41,55 +42,64 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                <div
+                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                                     <div class="p-3 bg-primary-50 rounded-full">
                                         <i class="mgc_phone_line text-xl text-primary-600"></i>
                                     </div>
                                     <div class="ml-4">
                                         <p class="text-sm font-medium text-gray-400">Phone</p>
-                                        <p class="text-base font-semibold text-gray-700">{{ $user->phone_number ?? 'Not provided' }}</p>
+                                        <p class="text-base font-semibold text-gray-700">
+                                            {{ $user->phone_number ?? 'Not provided' }}</p>
                                     </div>
                                 </div>
 
                                 @if ($user->area)
-                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                                    <div class="p-3 bg-primary-50 rounded-full">
-                                        <i class="mgc_map_pin_line text-xl text-primary-600"></i>
+                                    <div
+                                        class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                        <div class="p-3 bg-primary-50 rounded-full">
+                                            <i class="mgc_map_pin_line text-xl text-primary-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="text-sm font-medium text-gray-400">Area</p>
+                                            <p class="text-base font-semibold text-gray-700">{{ $user->area->name }}</p>
+                                        </div>
                                     </div>
-                                    <div class="ml-4">
-                                        <p class="text-sm font-medium text-gray-400">Area</p>
-                                        <p class="text-base font-semibold text-gray-700">{{ $user->area->name }}</p>
-                                    </div>
-                                </div>
                                 @endif
 
-                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                <div
+                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                                     <div class="p-3 bg-primary-50 rounded-full">
                                         <i class="mgc_user_3_line text-xl text-primary-600"></i>
                                     </div>
                                     <div class="ml-4">
                                         <p class="text-sm font-medium text-gray-400">Gender</p>
-                                        <p class="text-base font-semibold text-gray-700">{{ ucfirst($user->gender ?? 'Not specified') }}</p>
+                                        <p class="text-base font-semibold text-gray-700">
+                                            {{ ucfirst($user->gender ?? 'Not specified') }}</p>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                <div
+                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                                     <div class="p-3 bg-primary-50 rounded-full">
                                         <i class="mgc_book_2_line text-xl text-primary-600"></i>
                                     </div>
                                     <div class="ml-4">
                                         <p class="text-sm font-medium text-gray-400">Study</p>
-                                        <p class="text-base font-semibold text-gray-700">{{ $user->study ?? 'Not provided' }}</p>
+                                        <p class="text-base font-semibold text-gray-700">
+                                            {{ $user->study ?? 'Not provided' }}</p>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                                <div
+                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                                     <div class="p-3 bg-primary-50 rounded-full">
                                         <i class="mgc_calendar_line text-xl text-primary-600"></i>
                                     </div>
                                     <div class="ml-4">
                                         <p class="text-sm font-medium text-gray-400">Joined</p>
-                                        <p class="text-base font-semibold text-gray-700">{{ $user->created_at->format('M d, Y') }}</p>
+                                        <p class="text-base font-semibold text-gray-700">
+                                            {{ $user->created_at->format('M d, Y') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -169,9 +179,9 @@
                                         @foreach ($user->hallBookings as $booking)
                                             <tr>
                                                 <td class="py-2">{{ $booking->hall->name }}</td>
-                                                <td class="py-2">{{ $booking->date->format('M d, Y') }}</td>
-                                                <td class="py-2">{{ $booking->start_time }} -
-                                                    {{ $booking->end_time }}</td>
+                                                <td class="py-2">{{ $booking?->date?->format('M d, Y') ?? 'N/A' }}</td>
+                                                <td class="py-2">{{ $booking?->start_time ?? 'N/A' }} -
+                                                    {{ $booking?->end_time ?? 'N/A' }}</td>
                                                 <td class="py-2">
                                                     <span
                                                         class="badge {{ $booking->status === 'confirmed' ? 'bg-success-500' : ($booking->status === 'pending' ? 'bg-warning-500' : 'bg-danger-500') }}">
@@ -214,8 +224,10 @@
                                         @foreach ($user->onlineCourseBookings as $booking)
                                             <tr>
                                                 <td class="py-2">{{ $booking->course->name }}</td>
-                                                <td class="py-2">{{ $booking->start_date->format('M d, Y') }}</td>
-                                                <td class="py-2">{{ $booking->end_date->format('M d, Y') }}</td>
+                                                <td class="py-2">{{ $booking?->start_date?->format('M d, Y') ?? 'N/A' }}
+                                                </td>
+                                                <td class="py-2">{{ $booking?->end_date?->format('M d, Y') ?? 'N/A' }}
+                                                </td>
                                                 <td class="py-2">
                                                     <span
                                                         class="badge {{ $booking->status === 'active' ? 'bg-success-500' : 'bg-warning-500' }}">
@@ -259,10 +271,10 @@
                                             <tr>
                                                 <td class="py-2">{{ $booking->icdlCard->card_number }}</td>
                                                 <td class="py-2">
-                                                    {{ $booking?->icdlCard?->issue_date?->format('M d, Y') ?? null }}
+                                                    {{ $booking?->icdlCard?->issue_date?->format('M d, Y') ?? 'N/A' }}
                                                 </td>
                                                 <td class="py-2">
-                                                    {{ $booking?->icdlCard?->expiry_date?->format('M d, Y') ?? null }}
+                                                    {{ $booking?->icdlCard?->expiry_date?->format('M d, Y') ?? 'N/A' }}
                                                 </td>
                                                 <td class="py-2">
                                                     <span
