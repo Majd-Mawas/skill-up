@@ -123,8 +123,12 @@ class ICDLTestBookingController extends BaseController
                     ->count();
 
                 if ($bookingsCount < 5) {
-                    // Format time as 12:00 PM, 1:00 PM, etc.
-                    $formattedHour = $hour == 12 ? '12:00 PM' : ($hour - 12) . ':00 PM';
+                    // Format time with leading zeros for hours
+                    if ($hour == 12) {
+                        $formattedHour = '12:00 PM';
+                    } else {
+                        $formattedHour = sprintf('%02d:00 PM', $hour - 12);
+                    }
 
                     $dayTimes[] = [
                         'time' => $formattedHour,
