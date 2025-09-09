@@ -196,8 +196,8 @@ class OnlineCourseBookingController extends BaseController
         // Get current courses
         $currentQuery = OnlineCourseBooking::with(['course', 'user'])
             ->where('user_id', Auth::id())
-            ->where('booking_status', 'confirmed')
-            ->whereDate('start_date', '<=', now())
+            // ->where('booking_status', 'confirmed')
+            ->whereDate('start_date', '>=', now())
             ->latest();
 
         $currentBookings = $currentQuery->get();
@@ -205,15 +205,17 @@ class OnlineCourseBookingController extends BaseController
         // Get finished courses
         $finishedQuery = OnlineCourseBooking::with(['course', 'user'])
             ->where('user_id', Auth::id())
-            ->where(function($query) {
-                $query->where('booking_status', 'completed')
-                      ->orWhere(function($q) {
-                          // Consider courses as finished if they started more than course duration ago
-                          $q->where('booking_status', 'confirmed')
-                            ->whereHas('course', function($courseQuery) {
+            ->where(function ($query) {
+                $query
+                    // ->where('booking_status', 'completed')
+                    ->Where(function ($q) {
+                        // Consider courses as finished if they started more than course duration ago
+                        $q
+                            //   ->where('booking_status', 'confirmed')
+                            ->whereHas('course', function ($courseQuery) {
                                 $courseQuery->whereRaw('DATE_ADD(online_course_bookings.start_date, INTERVAL courses.duration_hours HOUR) < NOW()');
                             });
-                      });
+                    });
             })
             ->latest();
 
