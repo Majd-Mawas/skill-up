@@ -28,9 +28,9 @@
 
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-600 dark:text-gray-200 mb-2"
-                                    for="phone">Phone Number</label>
-                                <input id="phone" class="form-input" type="tel"
-                                    placeholder="Enter your phone number" name="phone_number" required>
+                                    for="phone">Email</label>
+                                <input id="phone" class="form-input" type="string" placeholder="Enter your Email"
+                                    name="email" required>
                                 @error('phone')
                                     <span class="text-danger text-sm">{{ $message }}</span>
                                 @enderror
