@@ -227,8 +227,8 @@ class BookingController extends BaseController
         // Validate request data
         $validator = Validator::make($request->all(), [
             'hall_id' => 'required|exists:halls,id',
-            'start_date' => 'required|date_format:d/m/Y',
-            'end_date' => 'required|date_format:d/m/Y',
+            'start_date' => 'required|date_format:m/d/Y',
+            'end_date' => 'required|date_format:m/d/Y',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
         ]);
@@ -329,9 +329,9 @@ class BookingController extends BaseController
 
         // Find the placement test by training center and name with case-insensitive search
         $placementTest = PlacementTest::where('training_center_id', $request->training_center_id)
-            ->where(function($query) use ($request) {
+            ->where(function ($query) use ($request) {
                 $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->test_name) . '%'])
-                      ->orWhereRaw('LOWER(name) = ?', [strtolower($request->test_name)]);
+                    ->orWhereRaw('LOWER(name) = ?', [strtolower($request->test_name)]);
             })
             ->first();
 
