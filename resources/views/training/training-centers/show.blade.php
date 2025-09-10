@@ -563,6 +563,10 @@
                     </div>
 
                     <div class="mt-6">
+                        <a href="{{ route('web.training-centers.export', $trainingCenter->id) }}"
+                            class="btn bg-success text-white">
+                            <i class="mgc_file_export_line me-1"></i> {{ __('Export to Excel') }}
+                        </a>
                         <a href="{{ route('web.training-centers.edit', $trainingCenter->id) }}"
                             class="btn bg-primary text-white">
                             {{ __('Edit Training Center') }}

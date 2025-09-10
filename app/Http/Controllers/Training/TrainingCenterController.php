@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TrainingCenter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TrainingCenterController extends Controller
 {
@@ -133,5 +134,13 @@ class TrainingCenterController extends Controller
         return redirect()
             ->route('web.training-centers.index')
             ->with('success', 'Training center deleted successfully.');
+    }
+
+    /**
+     * Export training center bookings to Excel.
+     */
+    public function export(TrainingCenter $trainingCenter)
+    {
+        return Excel::download(new \App\Exports\TrainingCenterBookingsExport($trainingCenter), $trainingCenter->name . ' - Bookings.xlsx');
     }
 }

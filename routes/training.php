@@ -21,6 +21,7 @@ Route::middleware(['auth'])->name('web.')->group(function () {
     Route::resource('courses.enrollments', EnrollmentController::class);
     Route::resource('courses.reviews', ReviewController::class);
     Route::resource('training-centers', TrainingCenterController::class);
+    Route::get('training-centers/{trainingCenter}/export', [TrainingCenterController::class, 'export'])->name('training-centers.export');
     Route::resource('training-centers.halls', HallController::class);
     Route::resource('interests', InterestController::class);
 });

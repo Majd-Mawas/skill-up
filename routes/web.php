@@ -33,7 +33,7 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::group(['prefix' => '/'], function () {
+Route::group(['prefix' => '/', 'middleware' => 'auth', 'middleware' => 'auth'], function () {
     Route::name('web.')->group(function () {
         Route::resource('halls', HallController::class);
         Route::prefix('courses')->group(function () {
@@ -51,7 +51,6 @@ Route::group(['prefix' => '/'], function () {
     });
     Route::get('', [RoutingController::class, 'index'])->name('root');
     Route::get('/home', fn() => view('index'))->name('home');
-    Route::get('/dashboard/statistics', [\App\Http\Controllers\DashboardController::class, 'getStatistics'])->name('dashboard.statistics');
     Route::get('{first}/{second}/{third}', [RoutingController::class, 'thirdLevel'])->name('third');
     Route::get('{first}/{second}', [RoutingController::class, 'secondLevel'])->name('second');
     Route::get('{any}', [RoutingController::class, 'root'])->name('any');
