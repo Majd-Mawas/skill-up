@@ -75,6 +75,12 @@
                     <span class="menu-text"> Categories </span>
                 </a>
             </li>
+            <li class="menu-item">
+                <a href="{{ route('web.interests.index') }}" class="menu-link">
+                    <span class="menu-icon"><i class="mgc_bookmark_line"></i></span>
+                    <span class="menu-text"> Interests </span>
+                </a>
+            </li>
             @if (env('APP_DEBUG'))
                 <li class="menu-title">Custom</li>
 

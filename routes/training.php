@@ -5,6 +5,7 @@ use App\Http\Controllers\Training\CategoryController;
 use App\Http\Controllers\Training\CourseController;
 use App\Http\Controllers\Training\EnrollmentController;
 use App\Http\Controllers\Training\HallController;
+use App\Http\Controllers\Training\InterestController;
 use App\Http\Controllers\Training\OnlineCourseController;
 use App\Http\Controllers\Training\ReviewController;
 use App\Http\Controllers\Training\SessionController;
@@ -21,4 +22,5 @@ Route::middleware(['auth'])->name('web.')->group(function () {
     Route::resource('courses.reviews', ReviewController::class);
     Route::resource('training-centers', TrainingCenterController::class);
     Route::resource('training-centers.halls', HallController::class);
+    Route::resource('interests', InterestController::class);
 });
