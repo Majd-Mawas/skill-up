@@ -49,7 +49,9 @@ class ICDLCardBookingsSheet implements FromCollection, WithTitle, WithHeadings, 
             'Payment Status',
             'Booking Status',
             'Total Price',
-            'Media Files',
+            'Personal Photo',
+            'ID Front Photo',
+            'ID Back Photo',
         ];
     }
 
@@ -60,10 +62,15 @@ class ICDLCardBookingsSheet implements FromCollection, WithTitle, WithHeadings, 
      */
     public function map($row): array
     {
-        // Get media files URLs
-        $mediaUrls = $row->getMedia('attachments')->map(function($media) {
-            return $media->getFullUrl();
-        })->implode(", ");
+        // Get individual media files URLs
+        $personalPhotoUrl = $row->getMedia('personal_photo')->first() ? 
+            $row->getMedia('personal_photo')->first()->getFullUrl() : '';
+            
+        $idFrontPhotoUrl = $row->getMedia('id_front_photo')->first() ? 
+            $row->getMedia('id_front_photo')->first()->getFullUrl() : '';
+            
+        $idBackPhotoUrl = $row->getMedia('id_back_photo')->first() ? 
+            $row->getMedia('id_back_photo')->first()->getFullUrl() : '';
 
         return [
             $row->id,
@@ -73,7 +80,9 @@ class ICDLCardBookingsSheet implements FromCollection, WithTitle, WithHeadings, 
             $row->payment_status,
             $row->booking_status,
             $row->total_price,
-            $mediaUrls,
+            $personalPhotoUrl,
+            $idFrontPhotoUrl,
+            $idBackPhotoUrl,
         ];
     }
 }
