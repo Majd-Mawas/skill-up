@@ -238,9 +238,9 @@
                                         <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             {{ __('Total Price') }}</th>
-                                        <th
+                                        {{-- <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            {{ __('Actions') }}</th>
+                                            {{ __('Actions') }}</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -270,14 +270,14 @@
                                             <td
                                                 class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                                 {{ number_format($booking->total_price, 2) }}</td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                            {{-- <td class="px-4 py-3 whitespace-nowrap text-sm">
                                                 <div class="flex space-x-2">
                                                     <a href="#"
                                                         class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
                                                         <i class="mgc_eye_line"></i>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr>
@@ -327,9 +327,9 @@
                                         <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             {{ __('Booking Status') }}</th>
-                                        <th
+                                        {{-- <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            {{ __('Actions') }}</th>
+                                            {{ __('Actions') }}</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -357,14 +357,14 @@
                                                     {{ ucfirst($booking->booking_status ?? 'pending') }}
                                                 </span>
                                             </td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                            {{-- <td class="px-4 py-3 whitespace-nowrap text-sm">
                                                 <div class="flex space-x-2">
                                                     <a href="#"
                                                         class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
                                                         <i class="mgc_eye_line"></i>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr>
@@ -416,9 +416,9 @@
                                         <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             {{ __('Total Price') }}</th>
-                                        <th
+                                        {{-- <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            {{ __('Actions') }}</th>
+                                            {{ __('Actions') }}</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -448,14 +448,14 @@
                                             <td
                                                 class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                                 {{ number_format($booking->total_price, 2) }}</td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                            {{-- <td class="px-4 py-3 whitespace-nowrap text-sm">
                                                 <div class="flex space-x-2">
                                                     <a href="#"
                                                         class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
                                                         <i class="mgc_eye_line"></i>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr>
@@ -505,9 +505,9 @@
                                         <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             {{ __('Total Price') }}</th>
-                                        <th
+                                        {{-- <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            {{ __('Actions') }}</th>
+                                            {{ __('Actions') }}</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -537,14 +537,14 @@
                                             <td
                                                 class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                                 {{ number_format($booking->total_price, 2) }}</td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                            {{-- <td class="px-4 py-3 whitespace-nowrap text-sm">
                                                 <div class="flex space-x-2">
                                                     <a href="#"
                                                         class="btn btn-sm bg-info text-white hover:bg-info-600 transition-colors duration-200">
                                                         <i class="mgc_eye_line"></i>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr>
