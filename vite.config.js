@@ -40,6 +40,7 @@ export default defineConfig({
                 'resources/js/head.js',
 
                 'resources/js/pages/dashboard.js',
+                'resources/js/dashboard-stats.js',
                 'resources/js/pages/apps-calendar.js',
                 'resources/js/pages/apps-kanban.js',
                 'resources/js/pages/extended-animation.js',

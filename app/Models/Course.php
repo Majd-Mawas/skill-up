@@ -86,6 +86,11 @@ class Course extends Model implements HasMedia
     {
         return $this->hasMany(OnlineCourseBooking::class);
     }
+    
+    public function courseBookings()
+    {
+        return $this->hasMany(CourseBooking::class);
+    }
 
     public function payments()
     {

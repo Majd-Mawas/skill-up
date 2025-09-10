@@ -9,7 +9,8 @@ File: Dashboard js
 import ApexCharts from "apexcharts";
 
 var colors = ["#3073F1", "#0acf97"];
-var dataColors = document.querySelector("#crm-project-statistics").dataset.colors;
+var projectStatisticsElement = document.querySelector("#crm-project-statistics");
+var dataColors = projectStatisticsElement ? projectStatisticsElement.dataset.colors : null;
 
 if (dataColors) {
     colors = dataColors.split(",");
@@ -68,18 +69,21 @@ var options = {
     }
 }
 
-var chart = new ApexCharts(
-    document.querySelector("#crm-project-statistics"),
-    options
-);
-
-chart.render();
+if (projectStatisticsElement) {
+    var chart = new ApexCharts(
+        projectStatisticsElement,
+        options
+    );
+    
+    chart.render();
+}
 
 
 
 //
 var colors = ["#3073F1", "#0acf97"];
-var dataColors = document.querySelector("#monthly-target").dataset.colors;
+var monthlyTargetElement = document.querySelector("#monthly-target");
+var dataColors = monthlyTargetElement ? monthlyTargetElement.dataset.colors : null;
 
 if (dataColors) {
     colors = dataColors.split(",");
@@ -112,17 +116,20 @@ var options = {
     }]
 }
 
-var chart = new ApexCharts(
-    document.querySelector("#monthly-target"),
-    options
-);
-
-chart.render();
+if (monthlyTargetElement) {
+    var chart = new ApexCharts(
+        monthlyTargetElement,
+        options
+    );
+    
+    chart.render();
+}
 
 
 //
 var colors = ["#3073F1", "#0acf97", "#fa5c7c", "#ffbc00"];
-var dataColors = document.querySelector("#project-overview-chart").dataset.colors;
+var projectOverviewElement = document.querySelector("#project-overview-chart");
+var dataColors = projectOverviewElement ? projectOverviewElement.dataset.colors : null;
 if (dataColors) {
     colors = dataColors.split(",");
 }
@@ -143,9 +150,13 @@ var options = {
     }
 }
 
-var chart = new ApexCharts(
-    document.querySelector("#project-overview-chart"),
-    options
-);
-
-chart.render();
+// Check if the project-overview-chart element exists before rendering
+var projectOverviewChartElement = document.querySelector("#project-overview-chart");
+if (projectOverviewChartElement) {
+    var chart = new ApexCharts(
+        projectOverviewChartElement,
+        options
+    );
+    
+    chart.render();
+}
